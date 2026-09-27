@@ -230,6 +230,19 @@
     .jump a, .stop-art svg.iso { transition: none; }
     .stop-art:hover svg.iso { transform: none; }
   }
+
+  .overview { display: flex; flex-direction: column; gap: 12px; }
+  .ov-frame { background: #fff; border: 2px solid var(--line); border-radius: 24px; padding: 6px; box-shadow: 0 8px 0 var(--sky-2); }
+  #ov { display: block; width: 100%; height: auto; }
+  #ov a { cursor: pointer; }
+  #ov a .cell-art { transition: transform .25s cubic-bezier(.16,1,.3,1); transform-box: fill-box; transform-origin: center; }
+  #ov a:hover .cell-art, #ov a:focus-visible .cell-art { transform: translateY(-8px); }
+  #ov a:focus-visible { outline: none; }
+  #ov a:focus-visible .cell-ring { stroke: var(--coral); stroke-width: 4; }
+  .ov-name { font-family: var(--head); font-weight: 600; font-size: 38px; fill: var(--ink); paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
+  .ov-day { font-family: var(--display); font-weight: 700; font-size: 30px; fill: #fff; }
+  .ov-zone { font-family: var(--head); font-weight: 500; font-size: 30px; fill: var(--pill); }
+  @media (prefers-reduced-motion: reduce) { #ov a .cell-art { transition: none; } }
 </style>
 </head>
 <body>
@@ -254,8 +267,14 @@
   </header>
 
   <nav class="jump" aria-label="ไปที่ส่วน">
-    <a href="#ask">ต้องตอบ</a><a href="#journey">เส้นทาง</a><a href="#budget">งบ</a><a href="#book">ต้องจอง</a><a href="#more">ก่อนไป</a>
+    <a href="#map">แผนที่</a><a href="#ask">ต้องตอบ</a><a href="#journey">รายวัน</a><a href="#budget">งบ</a><a href="#book">ต้องจอง</a><a href="#more">ก่อนไป</a>
   </nav>
+
+  <section class="overview" id="map" aria-labelledby="map-h">
+    <h2 class="pill" id="map-h">แผนที่ทั้งทริป</h2>
+    <p class="note">ถนนเส้นเดียวเรียงตามวัน เริ่มมุมซ้ายบนแล้วเลื้อยลงมา แตะฉากไหนก็ได้เพื่อไปดูรายละเอียดวันนั้น</p>
+    <div class="ov-frame"><svg id="ov" viewBox="0 0 1200 1500" role="img" aria-label="แผนที่เส้นทาง 10 วัน จาก Milan ผ่าน Dolomites ถึง Como"></svg></div>
+  </section>
 
   <section class="ask" id="ask" aria-labelledby="ask-h">
     <h2 id="ask-h">ขอเพื่อนช่วยตอบก่อนนะ</h2>
@@ -743,11 +762,11 @@
   var html = '';
   STOPS.forEach(function (st, i) {
     if (i > 0) html += '<div class="link" data-kind="' + (st.link || 'car') + '" data-i="' + i + '"></div>';
-    var sc = SCENES[st.scene]().render();
+    var sc = SCENES[st.scene]().render(); st._svg = sc.slice(0, sc.indexOf('</svg>') + 6);
     var chips = st.chips.map(function (c) { return '<span class="chip ' + c[0] + '">' + c[1] + '</span>'; }).join('');
     var box = st.box ? '<div class="box"><h4>' + st.box.h + '</h4><div class="foods">' + st.box.foods.map(function (f) { return '<div class="food"><span aria-hidden="true">' + f[0] + '</span><span>' + f[1] + '</span><small>' + f[2] + '</small></div>'; }).join('') + '</div></div>' : '';
     var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<span class="tag">' + PIN + 'Passo Giau · Cinque Torri</span></div>' : '';
-    html += '<article class="stop' + (i % 2 ? ' flip' : '') + '">' +
+    html += '<article class="stop' + (i % 2 ? ' flip' : '') + '" id="d' + i + '">' +
       '<figure class="stop-art" style="margin:0">' + sc + '</figure>' +
       '<div class="stop-text"><h3 class="pill" style="margin:0">' + st.day + ' <span class="sep">|</span> ' + st.title + '</h3>' +
       '<div class="ride"><i aria-hidden="true">' + st.ride[0] + '</i><span>' + st.ride[1] + '</span></div>' +
@@ -755,6 +774,53 @@
       (chips ? '<div class="chips">' + chips + '</div>' : '') + box + sunset + '</div></article>';
   });
   root.innerHTML = html;
+
+
+  /* ================= one-picture overview ================= */
+  (function () {
+    var ov = document.getElementById('ov'); if (!ov) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var cols = [200, 600, 1000], rowsTop = [70, 420, 770, 1120], CW = 360, CH = 250;
+    var names = ['สนามบิน MXP', 'Milan', 'Lake Garda', 'Val di Funes', 'Seceda', 'Alpe di Siusi', 'Lagazuoi', 'Tre Cime', 'Lago di Braies', 'Verona', 'Lake Como', 'บินกลับ'];
+    var days = ['1', '2', '3', '3', '4', '5', '6', '7', '8', '9', '9', '10'];
+    function cell(i) { var r = Math.floor(i / 3), c = i % 3; if (r % 2) c = 2 - c; return { x: cols[c], y: rowsTop[r], r: r }; }
+    var cy = rowsTop.map(function (t) { return t + CH * .62; });
+    var road = 'M' + cols[0] + ' ' + cy[0] + ' L' + cols[2] + ' ' + cy[0] +
+      ' C1160 ' + cy[0] + ' 1160 ' + cy[1] + ' ' + cols[2] + ' ' + cy[1] + ' L' + cols[0] + ' ' + cy[1] +
+      ' C40 ' + cy[1] + ' 40 ' + cy[2] + ' ' + cols[0] + ' ' + cy[2] + ' L' + cols[2] + ' ' + cy[2] +
+      ' C1160 ' + cy[2] + ' 1160 ' + cy[3] + ' ' + cols[2] + ' ' + cy[3] + ' L' + cols[0] + ' ' + cy[3];
+    var out = '';
+    // zones
+    out += '<rect x="14" y="14" width="1172" height="352" rx="30" fill="#EEF6FB"/>';
+    out += '<rect x="14" y="380" width="1172" height="700" rx="30" fill="#E6F3E4"/>';
+    out += '<rect x="14" y="1094" width="1172" height="392" rx="30" fill="#EEF6FB"/>';
+    out += '<text class="ov-zone" x="44" y="56">Milan + Lake Garda</text>';
+    out += '<text class="ov-zone" x="44" y="422" style="fill:#3F8A55">DOLOMITES · นอน Ortisei 3 คืน แล้ว Cortina 3 คืน</text>';
+    out += '<text class="ov-zone" x="44" y="1136">ขากลับ: Verona + Como</text>';
+    // road
+    out += '<path d="' + road + '" fill="none" stroke="#AEB9C0" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>';
+    out += '<path d="' + road + '" fill="none" stroke="#C9D3D9" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>';
+    out += '<path d="' + road + '" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="14 14" stroke-linecap="round"/>';
+    // cells
+    STOPS.forEach(function (st, i) {
+      var c = cell(i), svg = st._svg;
+      var art = svg.replace('<svg class="iso"', '<svg class="cell-art" x="' + (c.x - CW / 2) + '" y="' + (c.y - 6) + '" width="' + CW + '" height="' + CH + '" preserveAspectRatio="xMidYMid meet"');
+      var ly = c.y + CH + 34;
+      var nw = names[i].length * 20 + 24;
+      out += '<a href="#d' + i + '" aria-label="วัน ' + days[i] + ' ' + names[i] + '">' +
+        '<rect class="cell-ring" x="' + (c.x - CW / 2) + '" y="' + (c.y - 10) + '" width="' + CW + '" height="' + (CH + 70) + '" rx="24" fill="transparent" stroke="transparent"/>' +
+        art +
+        '<circle cx="' + (c.x - nw / 2 - 12) + '" cy="' + (ly - 10) + '" r="27" fill="#5B90BD" stroke="#fff" stroke-width="4"/>' +
+        '<text class="ov-day" x="' + (c.x - nw / 2 - 12) + '" y="' + (ly - 1) + '" text-anchor="middle">' + days[i] + '</text>' +
+        '<text class="ov-name" x="' + (c.x - nw / 2 + 20) + '" y="' + ly + '">' + names[i] + '</text></a>';
+    });
+    // car tracing the whole route
+    var car = '<g><g transform="translate(-23 -26)">' + CAR.replace('<svg viewBox="0 0 46 30">', '<svg width="46" height="30" viewBox="0 0 46 30">') + '</g>';
+    if (!reduce) car += '<animateMotion dur="16s" repeatCount="indefinite" path="' + road + '"/>';
+    else car = '<g transform="translate(' + cols[0] + ' ' + cy[0] + ')">' + car.slice(3);
+    out += car + '</g>';
+    ov.innerHTML = out;
+  })();
 
   /* ================= road connectors ================= */
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
