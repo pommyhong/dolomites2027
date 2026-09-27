@@ -114,7 +114,6 @@
   .food small { color: var(--muted); font-size: 12.5px; font-weight: 400; }
   .sunset { border-radius: 6px; overflow: hidden; position: relative; }
   .sunset > svg { display: block; width: 100%; height: auto; }
-  .sunset .tag { left: 50%; top: 22%; }
   .link { position: relative; height: 90px; }
   .link > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .road-base { fill: none; stroke: #C4CAC6; stroke-width: 10; stroke-linecap: round; }
@@ -161,6 +160,33 @@
     .jump a, .stop-art svg.iso, #ov a .cell-art { transition: none; }
     .stop-art:hover svg.iso { transform: none; }
   }
+
+  button.tag { border: 0; cursor: pointer; font-family: var(--body); transition: background .15s ease, transform .15s ease, box-shadow .15s ease; }
+  button.tag:hover { background: var(--forest); color: #fff; box-shadow: 0 3px 10px rgba(28,39,35,.3); }
+  button.tag:active { transform: translate(-50%, -100%) scale(.96); }
+  button.tag .cam { width: 13px; height: 10px; margin-left: 2px; opacity: .6; }
+  button.tag:hover .cam { opacity: 1; }
+  dialog#place { padding: 0; border: 0; border-radius: 8px; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); overflow: auto; background: var(--paper); color: var(--ink); box-shadow: 0 30px 80px -20px rgba(28,39,35,.55); }
+  dialog#place::backdrop { background: rgba(28,39,35,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+  dialog#place[open] { animation: pop .28s cubic-bezier(.16,1,.3,1); }
+  @keyframes pop { from { transform: translateY(16px) scale(.98); opacity: 0; } to { transform: none; opacity: 1; } }
+  .pl-fig { margin: 0; position: relative; background: var(--forest-soft); }
+  .pl-fig img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+  .pl-fig figcaption { font-size: 11.5px; color: var(--muted); padding: 6px 18px 0; }
+  .pl-fig figcaption a { color: var(--muted); }
+  .pl-body { padding: 10px 18px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .pl-body h3 { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.3; }
+  .pl-body p { margin: 0; color: var(--ink); }
+  .pl-act { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .pl-act a, .pl-act button { font: inherit; font-weight: 600; font-size: 14.5px; padding: 9px 16px; border-radius: 4px; text-decoration: none; cursor: pointer; }
+  .pl-act a { background: var(--forest); color: #fff; }
+  .pl-act button { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+  @media (max-width: 560px) {
+    dialog#place { width: 100vw; max-width: 100vw; margin: auto 0 0; border-radius: 12px 12px 0 0; max-height: 92dvh; }
+    dialog#place[open] { animation: sheet .3s cubic-bezier(.16,1,.3,1); }
+    @keyframes sheet { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  }
+  @media (prefers-reduced-motion: reduce) { dialog#place[open] { animation: none; } button.tag { transition: none; } }
 </style>
 </head>
 <body>
@@ -199,7 +225,7 @@
     </div>
   </section>
 
-  <section aria-labelledby="journey-h"><h2 id="journey-h" class="journey-h">รายวัน</h2><div class="journey" id="journey"></div></section>
+  <section aria-labelledby="journey-h"><h2 id="journey-h" class="journey-h">รายวัน</h2><p class="note" style="margin-bottom:16px">แตะป้ายชื่อสถานที่บนภาพเพื่อดูรูปถ่ายจริง</p><div class="journey" id="journey"></div></section>
 
   <section class="panel" id="budget" aria-labelledby="budget-h">
     <h2 id="budget-h">งบต่อคน</h2>
@@ -251,7 +277,16 @@
     </div>
   </section>
 
-  <footer>ร่างแผน v5 · อัปเดต 28/09/2026 · ราคาเช็กวันที่ 27/09/2026 และเปลี่ยนได้ทุกวัน · ภาพประกอบเป็นภาพวาดแบบย่อ ไม่ตามสเกลจริง</footer>
+  <dialog id="place" aria-labelledby="place-n">
+    <figure class="pl-fig"><img id="place-img" alt="" width="1000" height="667"><figcaption id="place-cap"></figcaption></figure>
+    <div class="pl-body">
+      <h3 id="place-n"></h3>
+      <p id="place-d"></p>
+      <div class="pl-act"><a id="place-map" href="#" target="_blank" rel="noopener">เปิดใน Google Maps</a><button type="button" id="place-x">ปิด</button></div>
+    </div>
+  </dialog>
+
+  <footer>ร่างแผน v6 · อัปเดต 28/09/2026 · รูปสถานที่จาก Wikimedia Commons (เครดิตอยู่ใต้รูป) · ราคาเช็กวันที่ 27/09/2026 และเปลี่ยนได้ทุกวัน · ภาพประกอบเป็นภาพวาดแบบย่อ ไม่ตามสเกลจริง</footer>
 </div>
 
 <script>
@@ -408,17 +443,19 @@
       polyS([P(x, y, .25), P(x + 1.8, y, .25), P(x + 1.8, y + .5, .25), P(x, y + .5, .25)], shade(col || K.wood, 1.15)));
     return this;
   };
-  Scene.prototype.label = function (x, y, z, text) { this.labels.push({ P: this.p(x, y, z), text: text }); return this; };
+  Scene.prototype.label = function (x, y, z, text, key) { this.labels.push({ P: this.p(x, y, z), text: text, key: key }); return this; };
   Scene.prototype.render = function () {
     var pad = 10, b = this.b, w = b[2] - b[0] + pad * 2, h = b[3] - b[1] + pad * 2;
     var items = this.items.slice().sort(function (a, c) { return a.k - c.k || a.s - c.s; });
     var svg = '<svg class="iso" viewBox="' + (b[0] - pad).toFixed(1) + ' ' + (b[1] - pad).toFixed(1) + ' ' + w.toFixed(1) + ' ' + h.toFixed(1) + '" aria-hidden="true">' + items.map(function (i) { return i.svg; }).join('') + '</svg>';
     var tags = this.labels.map(function (l) {
       var lx = (l.P[0] - (b[0] - pad)) / w * 100, ly = (l.P[1] - (b[1] - pad)) / h * 100;
-      return '<span class="tag" style="left:' + lx.toFixed(1) + '%;top:' + ly.toFixed(1) + '%">' + PIN + l.text + '</span>';
+      return l.key ? '<button type="button" class="tag" data-place="' + l.key + '" style="left:' + lx.toFixed(1) + '%;top:' + ly.toFixed(1) + '%">' + PIN + l.text + CAM + '</button>' : '<span class="tag" style="left:' + lx.toFixed(1) + '%;top:' + ly.toFixed(1) + '%">' + PIN + l.text + '</span>';
     }).join('');
     return svg + tags;
   };
+  var CAM = '<svg class="cam" viewBox="0 0 14 11" aria-hidden="true"><path d="M1 3h3l1.2-2h3.6L10 3h3v7H1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="7" cy="6.3" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+  var PLACES = {"malpensa": {"n": "สนามบิน Milan Malpensa", "d": "สนามบินหลักของ Milan อยู่นอกเมืองราว 50 กม. นั่งรถไฟ Malpensa Express เข้าเมืองราว 50 นาที", "q": "Milan Malpensa Airport", "src": "img/malpensa.jpg", "by": "Arne Müseler", "lic": "CC BY-SA 3.0 de", "page": "https://commons.wikimedia.org/wiki/File:Milan_malpensa_terminal_airport.jpg"}, "duomo": {"n": "Duomo di Milano", "d": "มหาวิหารแบบกอธิคกลางเมือง ใช้เวลาสร้างเกือบ 600 ปี ขึ้นไปเดินบนดาดฟ้าท่ามกลางยอดแหลมได้", "q": "Duomo di Milano", "src": "img/duomo.jpg", "by": "Jiuguang Wang", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Milan_Cathedral_from_Piazza_del_Duomo.jpg"}, "galleria": {"n": "Galleria Vittorio Emanuele II", "d": "อาเขตหลังคาโดมกระจกจากศตวรรษที่ 19 อยู่ติดกับ Duomo", "q": "Galleria Vittorio Emanuele II", "src": "img/galleria.jpg", "by": "Marco Pagani", "lic": "CC BY 3.0", "page": "https://commons.wikimedia.org/wiki/File:Galleria_Milano_(179532365).jpeg"}, "navigli": {"n": "คลอง Navigli", "d": "คลองเก่าย่านร้านอาหารและบาร์ ช่วงเย็นคนมานั่งดื่ม aperitivo ริมคลอง", "q": "Naviglio Grande Milan", "src": "img/navigli.jpg", "by": "Flavmi", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Naviglio_Grande,_Milano.jpg"}, "sforzesco": {"n": "Castello Sforzesco", "d": "ปราสาทอิฐแดงของตระกูล Sforza ลานด้านในเข้าฟรี ข้างในมีพิพิธภัณฑ์หลายส่วน รวมถึงงานชิ้นสุดท้ายของ Michelangelo (Rondanini Pietà)", "q": "Castello Sforzesco", "src": "img/sforzesco.jpg", "by": "Jakub Hałun", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:20110725_Castello_Sforzesco_Milan_5557.jpg"}, "brera": {"n": "Pinacoteca di Brera", "d": "หอศิลป์ชั้นนำของอิตาลี มีงานของ Raphael, Caravaggio และ Mantegna อยู่ในย่าน Brera ที่มีร้านดีไซน์เยอะ", "q": "Pinacoteca di Brera", "src": "img/brera.jpg", "by": "Jean-Christophe BENOIST", "lic": "CC BY 3.0", "page": "https://commons.wikimedia.org/wiki/File:Milan_-_Pinacoth%C3%A8que_de_Brera_-_Cour_int%C3%A9rieure.jpg"}, "sirmione": {"n": "Sirmione", "d": "เมืองเก่าบนแหลมยื่นกลาง Lake Garda มีปราสาท Scaliger ที่มีน้ำล้อมรอบ", "q": "Sirmione", "src": "img/sirmione.jpg", "by": "Arne Müseler", "lic": "CC BY-SA 3.0 de", "page": "https://commons.wikimedia.org/wiki/File:Italy_-_Sirmione.jpg"}, "garda": {"n": "Lake Garda", "d": "ทะเลสาบใหญ่ที่สุดของอิตาลี อยู่ระหว่างทางจาก Milan ไป Dolomites", "q": "Lake Garda", "src": "img/garda.jpg", "by": "Guido Adler. Upload by Moroder", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:La_Rocca_di_Manerba_del_Garda_con_l%27isola_dei_Conigli.jpg"}, "maddalena": {"n": "โบสถ์ Santa Maddalena", "d": "โบสถ์เล็กกลางทุ่งใน Val di Funes ฉากหลังเป็นเทือกเขา Odle เป็นมุมถ่ายรูปคลาสสิกของ Dolomites", "q": "Santa Maddalena Val di Funes", "src": "img/maddalena.jpg", "by": "Eric Kilby", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Church_at_Santa_Maddalena_and_Dolomites.jpg"}, "odle": {"n": "เทือกเขา Odle", "d": "เทือกเขายอดแหลมหลัง Val di Funes มองเห็นได้ทั้งจากหุบเขาและจาก Seceda", "q": "Odle Dolomites", "src": "img/odle.jpg", "by": "Tobia Maio", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Geislergruppe_-_Gruppo_delle_Odle..jpg"}, "seceda": {"n": "Seceda", "d": "สันเขาสูง 2,519 ม. ด้านหนึ่งเป็นทุ่งหญ้าลาด อีกด้านเป็นหน้าผาชัน ขึ้นกระเช้าจาก Ortisei", "q": "Seceda", "src": "img/seceda.jpg", "by": "Wolfgang Moroder", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Seceda_Gherdeina.JPG"}, "ortisei": {"n": "Ortisei", "d": "เมืองหลักของ Val Gardena และที่พักช่วงแรก มีกระเช้าขึ้น Seceda และ Alpe di Siusi จากในเมือง", "q": "Ortisei", "src": "img/ortisei.jpg", "by": "Wolfgang Moroder.  \n\nFeel free to use my photos, but ple", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Urtij%C3%ABi_cun_l_Sela_Y_Saslonch_da_Tlesura.jpg"}, "sassolungo": {"n": "Sassolungo", "d": "ภูเขาหินที่เห็นเด่นจากทุ่ง Alpe di Siusi ตอนเย็นหินจะเปลี่ยนเป็นสีส้มชมพู", "q": "Sassolungo", "src": "img/sassolungo.jpg", "by": "Wolfgang Moroder.  \n\nFeel free to use my photos, but ple", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Saslonch_udu_da_Mont_de_Seuc.jpg"}, "siusi": {"n": "Alpe di Siusi", "d": "ทุ่งหญ้าบนภูเขาที่ใหญ่ที่สุดในยุโรป ทางเดินส่วนใหญ่เรียบ เดินง่าย", "q": "Alpe di Siusi", "src": "img/siusi.jpg", "by": "Sammerci", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Seiser_Alm_im_Herbst_%C2%A9Manfred_Kostner.jpg"}, "lagazuoi": {"n": "Lagazuoi", "d": "ยอดเขาที่นั่งกระเช้าขึ้นจาก Passo Falzarego บนยอดมีกระท่อมให้นั่งกินข้าวชมวิว", "q": "Rifugio Lagazuoi", "src": "img/lagazuoi.jpg", "by": "kallerna", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Lagazuoi_cable_car_2.jpg"}, "pordoi": {"n": "ถนนช่องเขา Pordoi", "d": "หนึ่งในช่องเขาบนเส้นทางขับรถข้าม Dolomites ถนนคดเคี้ยววิวสวยตลอดทาง", "q": "Passo Pordoi", "src": "img/pordoi.jpg", "by": "Giorgio Galeotti", "lic": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Pordoi_Pass_-_Canazei,_Trento,_Italy_-_August_12,_2013_03.jpg"}, "trecime": {"n": "Tre Cime di Lavaredo", "d": "ยอดเขาหินสามยอดที่เป็นสัญลักษณ์ของ Dolomites มีทางเดินรอบเขาราว 10 กม.", "q": "Rifugio Auronzo", "src": "img/trecime.jpg", "by": "Murray Foubister", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Dolomites_-_Dobbiaco_area_-_Tri_Cima_(Drei_Zinnen)_(11059160565).jpg"}, "misurina": {"n": "Lago di Misurina", "d": "ทะเลสาบใกล้ทางขึ้น Tre Cime เหมาะแวะพักหลังเดินเขา", "q": "Lago di Misurina", "src": "img/misurina.jpg", "by": "Giampaolo.Trapasso on it.wikipedia", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Lago_di_misurina.jpg"}, "braies": {"n": "Lago di Braies", "d": "ทะเลสาบสีเขียวอมฟ้า มีโรงเรือไม้และเรือพายให้เช่า ช่วงสายคนเยอะ ควรไปเช้า", "q": "Lago di Braies", "src": "img/braies.jpg", "by": "STirol", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Pragser_Wildsee_Seekofel_von_Bucht.jpg"}, "becco": {"n": "Croda del Becco", "d": "ภูเขาที่ตั้งอยู่หลังทะเลสาบ Braies เป็นฉากหลังของรูปทะเลสาบแทบทุกรูป", "q": "Croda del Becco", "src": "img/becco.jpg", "by": "ไม่ระบุ", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Dolomiten_Seekofel.jpg"}, "cinquetorri": {"n": "Cinque Torri", "d": "กลุ่มหอคอยหินใกล้ Cortina มีพิพิธภัณฑ์กลางแจ้งเรื่องสงครามโลกครั้งที่ 1", "q": "Cinque Torri", "src": "img/cinquetorri.jpg", "by": "Luca Sartoni from Vienna, Austria", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Cortina_(50162425826).jpg"}, "giau": {"n": "Passo Giau", "d": "ช่องเขาใกล้ Cortina จุดดูพระอาทิตย์ตกยอดนิยม", "q": "Passo Giau", "src": "img/giau.jpg", "by": "Frisia Orientalis", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Passo_di_Giau.jpg"}, "arena": {"n": "Arena di Verona", "d": "โรงละครกลางแจ้งสมัยโรมันกลางเมือง Verona หน้าร้อนยังใช้จัดโอเปร่า", "q": "Arena di Verona", "src": "img/arena.jpg", "by": "Claconvr", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Arena-XE3F2406a.jpg"}, "como": {"n": "Lake Como", "d": "ทะเลสาบรูปตัว Y ล้อมด้วยภูเขาและวิลล่าเก่า นั่งเรือไปหมู่บ้านริมทะเลสาบได้", "q": "Como Italy", "src": "img/como.jpg", "by": "Luca Casartelli", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Sentiero_del_Viandante_DSC_6340_(14020554463).jpg"}, "brunate": {"n": "รถราง Como-Brunate", "d": "รถรางไต่เขาจากเมือง Como ขึ้นหมู่บ้าน Brunate ข้างบนมีจุดชมวิวทะเลสาบ", "q": "Funicolare Como Brunate", "src": "img/brunate.jpg", "by": "Chris j wood", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Como%E2%80%93Brunate_funicular_October_2012_10.jpg"}};
   var PIN = '<svg viewBox="0 0 12 15" aria-hidden="true"><path d="M6 14.5S1 9 1 5.6a5 5 0 0 1 10 0C11 9 6 14.5 6 14.5z" fill="#E4574B"/><circle cx="6" cy="5.6" r="1.9" fill="#fff"/></svg>';
 
   /* ================= scenes ================= */
@@ -434,7 +471,7 @@
       var P = s.p(4.5, 6.2, .8), X = P[0], Y = P[1];
       s.add(500, '<g transform="translate(' + X.toFixed(1) + ' ' + Y.toFixed(1) + ') rotate(-14)"><path d="M-34 -3h56c6 0 10 2 10 3s-4 3-10 3h-56z" fill="#fff" stroke="' + LINE + '"/><path d="M-6 -3 6 -24h7L6 -3zM-6 3 6 22h7L6 3zM-30 -3l-6 -11h5l9 11z" fill="#DDE8EF" stroke="' + LINE + '"/><circle cx="24" cy="0" r="1.6" fill="#4F6F82"/><path d="M-20 0h34" stroke="#4F6F82" stroke-width="1.5" stroke-dasharray="2.5 2.5"/></g>');
       s.bush(.6, .4, 0, .5).bush(10.3, 4.4, 0, .45);
-      s.label(4, 2.2, 1.9, 'สนามบิน Malpensa');
+      s.label(4, 2.2, 1.9, 'สนามบิน Malpensa', 'malpensa');
       return s;
     },
     milan: function () {
@@ -463,9 +500,11 @@
       // tram
       s.box(2.2, 7, 0, 3.4, 1, 1, K.tram, { win: '#FFF3D9', k: 10 });
       s.path([[.3, 7.6, 0], [12.7, 7.6, 0]], '#8C98A0', 1.2, -890).path([[.3, 8.1, 0], [12.7, 8.1, 0]], '#8C98A0', 1.2, -890);
-      s.bush(8.5, 6.4, 0, .55).bush(10.5, 6.6, 0, .6).bush(12.2, 6.2, 0, .5);
+      s.bush(8.5, 6.4, 0, .55);
+      s.box(9.8, 6, 0, 2.6, 2, 1.1, '#C99479', { k: 17 }); s.box(10.7, 6.5, 0, .9, .9, 2.4, '#C99479', { k: 17.2 }); s.pyr(10.65, 6.45, 2.4, 1, 1, .5, '#B0654F', { k: 17.3 });
+      s.box(.2, 5, 0, 1.7, 1.5, 1.5, K.ochre, { win: '#fff', k: 6.5 }); s.roof(.1, 4.9, 1.5, 1.9, 1.7, .4, K.roof, 'x', { k: 6.55 });
       s.dots([[7, 6, .1], [7.6, 6.4, .1], [6.8, 6.9, .1]], '#6E7B85', 1.6);
-      s.label(4.6, 3.2, 7.2, 'Duomo').label(10.5, 3, 3.2, 'Galleria').label(9.5, 10.2, .2, 'คลอง Navigli');
+      s.label(11.1, 7, 3, 'Castello Sforzesco', 'sforzesco').label(1, 5.8, 2.2, 'Pinacoteca di Brera', 'brera').label(4.6, 3.2, 7.2, 'Duomo', 'duomo').label(10.5, 3, 3.2, 'Galleria', 'galleria').label(9.5, 10.2, .2, 'คลอง Navigli', 'navigli');
       return s;
     },
     garda: function () {
@@ -482,7 +521,7 @@
       [0, .5, 1].forEach(function (d) { s.box(6 + d, 4.28, 3.6, .3, .3, .45, '#E3D7C4', { k: 11.1 }); s.box(7.1, 4.3 + d, 3.6, .3, .3, .45, '#E3D7C4', { k: 11.2 }); });
       s.boat(1, 5, '#F7F1E6').boat(11, 2, '#E7C6BC');
       s.cypress(2, 8.3, .7).cypress(11.8, 8.2, .8);
-      s.label(6.7, 5, 4.4, 'ปราสาท Sirmione').label(2.5, 1.5, 0, 'Lake Garda');
+      s.label(6.7, 5, 4.4, 'ปราสาท Sirmione', 'sirmione').label(2.5, 1.5, 0, 'Lake Garda', 'garda');
       return s;
     },
     funes: function () {
@@ -497,7 +536,7 @@
       s.pyr(7.85, 6.15, 2.9, 1, 1, 1.9, K.roof, { k: 14.5 });
       s.house(2.5, 7.5, 1.4, 1.1, .8, K.wood, '#8C5A3C', 'x');
       s.dots([[3, 9.5], [6, 10.2], [10, 9], [11, 10.3], [8.5, 9.9]], '#E7C77A', 1.8);
-      s.label(7, 6.6, 4.9, 'โบสถ์ Santa Maddalena').label(8, .8, 5.8, 'เทือกเขา Odle');
+      s.label(7, 6.6, 4.9, 'โบสถ์ Santa Maddalena', 'maddalena').label(8, .8, 5.8, 'เทือกเขา Odle', 'odle');
       return s;
     },
     seceda: function () {
@@ -509,7 +548,7 @@
       s.cable([1.8, 8.4, 1.4], [8.5, 2.5, 7.2], .55);
       [[.6, 9.2], [4.5, 8.8], [6, 9.3], [11.8, 8.8], [12.4, 7.8]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
       s.dots([[5, 3, 2.7, '#C25B45'], [5.3, 3.2, 2.9, '#4F6F82']], '#C25B45', 1.8, 11);
-      s.label(10.5, 3.5, 7.8, 'สันเขา Seceda').label(2, 8.6, 1.5, 'กระเช้าจาก Ortisei');
+      s.label(10.5, 3.5, 7.8, 'สันเขา Seceda', 'seceda').label(2, 8.6, 1.5, 'กระเช้าจาก Ortisei', 'ortisei');
       return s;
     },
     siusi: function () {
@@ -523,7 +562,7 @@
       s.dots([[2, 9], [3, 9.8], [5.5, 9.5], [7, 10.2], [10, 9.6], [12, 8.8], [1.4, 7.4], [12.8, 10], [9, 10.5]], '#E7C77A', 1.8);
       s.dots([[2.6, 8.5], [6.2, 9.9], [11, 10.2], [8.2, 9.2]], '#E4A7A0', 1.8);
       [[.6, 4], [1.4, 3.6], [13.2, 3], [13.4, 7.4]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.label(5, 1.2, 6, 'Sassolungo').label(7, 6.3, .8, 'ทุ่งหญ้า Alpe di Siusi');
+      s.label(5, 1.2, 6, 'Sassolungo', 'sassolungo').label(7, 6.3, .8, 'ทุ่งหญ้า Alpe di Siusi', 'siusi');
       return s;
     },
     passes: function () {
@@ -536,7 +575,7 @@
       s.car(5.4, 7.7, '#D9B45E');
       s.box(10.6, 9.2, 0, .15, .15, 1.3, '#6E7B85', { k: 20 }); s.box(10.3, 9.2, 1.3, .8, .1, .45, '#4F6F82', { k: 20.1 });
       [[11, 9.6], [12, 8.6], [12.4, 10.2], [.6, 6.5], [1.4, 5.2]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.label(9.8, 2.6, 6.6, 'Lagazuoi').label(4.4, 10.3, .3, 'ถนนช่องเขา');
+      s.label(9.8, 2.6, 6.6, 'Lagazuoi', 'lagazuoi').label(4.4, 10.3, .3, 'ถนนช่องเขา', 'pordoi');
       return s;
     },
     trecime: function () {
@@ -550,7 +589,7 @@
       s.flat([[8.4, 8.2], [11.8, 7.8], [12.4, 9.8], [9, 10.4]], 0, K.lake, -880);
       [[7.8, 8], [12.6, 7.3], [8.2, 10.6], [5.2, 9.6], [6, 10.4]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
       s.dots([[4, 5.6, .1, '#C25B45'], [4.4, 5.5, .1, '#4F6F82'], [7.5, 5.3, .1, '#D9B45E']], '#C25B45', 1.8, -860);
-      s.label(6, 2.4, 8.4, 'Tre Cime').label(10.4, 9.2, .2, 'Lago di Misurina');
+      s.label(6, 2.4, 8.4, 'Tre Cime', 'trecime').label(10.4, 9.2, .2, 'Lago di Misurina', 'misurina');
       return s;
     },
     braies: function () {
@@ -563,7 +602,7 @@
       s.flat([[6.4, 8.4], [7.4, 8.4], [7.4, 9.9], [6.4, 9.9]], .05, '#D9A870', -850);
       s.boat(3, 6, '#C98F59').boat(5.6, 7.2, '#C98F59').boat(4.6, 4.8, '#C98F59').boat(9.6, 5.8, '#C98F59');
       [[.4, 3], [1.2, 2.4], [.3, 9.6], [2.2, 10.2], [12.6, 3], [12.7, 9.8], [11.6, 10.3], [10.4, 10.2], [3.4, 10.5]].forEach(function (p) { s.pine(p[0], p[1], 0, .55); });
-      s.label(6.2, 1.2, 5.6, 'Croda del Becco').label(4.8, 6.4, .2, 'Lago di Braies');
+      s.label(6.2, 1.2, 5.6, 'Croda del Becco', 'becco').label(4.8, 6.4, .2, 'Lago di Braies', 'braies');
       return s;
     },
     verona: function () {
@@ -580,7 +619,7 @@
       s.house(.6, .6, 2, 1.6, 1.5, '#E8D2AA', K.roof, 'x').house(9.4, .8, 1.8, 1.8, 1.8, '#E9CDBA', K.roof, 'y');
       s.cypress(1, 8.6, .8).cypress(11.2, 8.3, .9).bush(10.6, 6.8, 0, .5);
       s.dots([[2.5, 8.5, .1], [3, 9, .1], [9, 9.2, .1]], '#6E7B85', 1.6);
-      s.label(6, 5, 2.4, 'Arena di Verona');
+      s.label(6, 5, 2.4, 'Arena di Verona', 'arena');
       return s;
     },
     como: function () {
@@ -594,7 +633,7 @@
       var t = s, P = function (a, b, c) { return t.p(a, b, c); };
       s.boat(4, 7.4, '#FFFFFF').boat(8.6, 8.4, '#E7C6BC');
       s.add(20, '<line x1="' + P(4.9, 7.6, .25)[0].toFixed(1) + '" y1="' + P(4.9, 7.6, .25)[1].toFixed(1) + '" x2="' + P(4.9, 7.6, 2)[0].toFixed(1) + '" y2="' + P(4.9, 7.6, 2)[1].toFixed(1) + '" stroke="#6E7B85" stroke-width="1.2"/>' + polyS([P(4.95, 7.6, 1.9), P(4.95, 7.6, .5), P(5.9, 7.6, .5)], '#fff'));
-      s.label(4.7, 4, 2.8, 'วิลล่าริม Lake Como').label(11.5, 3, 1.8, 'รถราง Brunate');
+      s.label(4.7, 4, 2.8, 'วิลล่าริม Lake Como', 'como').label(11.5, 3, 1.8, 'รถราง Brunate', 'brunate');
       return s;
     },
     home: function () {
@@ -604,7 +643,7 @@
       s.car(2, 1.2, '#4F6F82');
       var P = s.p(8.5, 3.5, 3.2); s.p(8.5, 3.5, 5.5);
       s.add(500, '<g transform="translate(' + P[0].toFixed(1) + ' ' + P[1].toFixed(1) + ') rotate(-24)"><path d="M-34 -3h56c6 0 10 2 10 3s-4 3-10 3h-56z" fill="#fff" stroke="' + LINE + '"/><path d="M-6 -3 6 -24h7L6 -3zM-6 3 6 22h7L6 3zM-30 -3l-6 -11h5l9 11z" fill="#DDE8EF" stroke="' + LINE + '"/><circle cx="24" cy="0" r="1.6" fill="#4F6F82"/><path d="M-20 0h34" stroke="#4F6F82" stroke-width="1.5" stroke-dasharray="2.5 2.5"/></g>');
-      s.label(2.8, 1.6, 1.3, 'คืนรถที่ MXP');
+      s.label(2.8, 1.6, 1.3, 'คืนรถที่ MXP', 'malpensa');
       return s;
     }
   };
@@ -617,8 +656,8 @@
       chips: [['sleep', 'นอนบนเครื่อง']] },
     { scene: 'milan', day: 'DAY 2', title: 'เที่ยวเมือง Milan', link: 'train',
       ride: ['🚆', 'รถไฟ Malpensa Express สนามบิน → Milan ราว 50 นาที'],
-      li: ['Duomo ขึ้นดาดฟ้า และ Galleria Vittorio Emanuele II', 'บ่ายพักแก้ jet lag ถ้ายังไหวไป Castello Sforzesco หรือ Triennale', 'ตอนเย็นไปคลอง Navigli สั่ง aperitivo กินแทนมื้อเย็น'],
-      chips: [['sleep', 'นอน Milan'], ['book', 'จองดาดฟ้า Duomo']],
+      li: ['11:00 ฝากกระเป๋าที่โรงแรม · 11:30 Duomo ขึ้นดาดฟ้า และ Galleria', '14:30 Castello Sforzesco ลานด้านในเข้าฟรี ดูพิพิธภัณฑ์ราว 1 ชม.', '16:00 เดิน 10 นาทีไป Pinacoteca di Brera ใช้เวลาราว 1.5 ชม.', '19:00 คลอง Navigli สั่ง aperitivo กินแทนมื้อเย็น'],
+      chips: [['sleep', 'นอน Milan'], ['book', 'จองดาดฟ้า Duomo'], ['book', 'จองตั๋ว Brera']],
       box: { h: 'ของกินแนะนำใน Milan', foods: [['🍛', 'Risotto alla Milanese', 'ริซอตโต้หญ้าฝรั่น'], ['🥩', 'Cotoletta', 'หมูชุบเกล็ดขนมปัง'], ['🍹', 'Aperitivo', 'ดื่ม 1 แก้วได้กินกับแกล้ม']] } },
     { scene: 'garda', day: 'DAY 3', title: 'รับรถ แวะ Lake Garda',
       ride: ['🚗', 'รับรถในเมือง Milan → Sirmione ราว 1.5 ชม.'],
@@ -677,7 +716,7 @@
     var sc = SCENES[st.scene]().render(); st._svg = sc.slice(0, sc.indexOf('</svg>') + 6);
     var chips = st.chips.map(function (c) { return '<span class="chip ' + c[0] + '">' + c[1] + '</span>'; }).join('');
     var box = st.box ? '<div class="box"><h4>' + st.box.h + '</h4><div class="foods">' + st.box.foods.map(function (f) { return '<div class="food"><span>' + f[1] + '</span><small>' + f[2] + '</small></div>'; }).join('') + '</div></div>' : '';
-    var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<span class="tag">' + PIN + 'Passo Giau · Cinque Torri</span></div>' : '';
+    var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<button type="button" class="tag" data-place="giau" style="left:30%;top:30%">' + PIN + 'Passo Giau' + CAM + '</button><button type="button" class="tag" data-place="cinquetorri" style="left:70%;top:36%">' + PIN + 'Cinque Torri' + CAM + '</button></div>' : '';
     html += '<article class="stop' + (i % 2 ? ' flip' : '') + '" id="d' + i + '">' +
       '<figure class="stop-art" style="margin:0">' + sc + '</figure>' +
       '<div class="stop-text"><h3 class="day-h"><small>' + st.day.toUpperCase() + '</small>' + st.title + '</h3>' +
@@ -793,6 +832,25 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { drive(e.target); io.unobserve(e.target); } }); }, { threshold: .6 });
     links.forEach(function (el) { io.observe(el); });
   } else { links.forEach(function (el) { el._t = 1; placeRider(el); }); }
+
+  /* ================= real photo preview ================= */
+  var dlg = document.getElementById('place');
+  function openPlace(key) {
+    var p = PLACES[key]; if (!p || !dlg) return;
+    var img = document.getElementById('place-img');
+    img.src = p.src; img.alt = 'รูปถ่าย ' + p.n;
+    document.getElementById('place-n').textContent = p.n;
+    document.getElementById('place-d').textContent = p.d;
+    document.getElementById('place-cap').innerHTML = 'ภาพ: ' + p.by.replace(/[<>&]/g, '') + ' · ' + p.lic + ' · <a href="' + p.page + '" target="_blank" rel="noopener">Wikimedia Commons</a>';
+    document.getElementById('place-map').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.q);
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-place]');
+    if (t) { e.preventDefault(); openPlace(t.getAttribute('data-place')); return; }
+    if (e.target === dlg) dlg.close();
+  });
+  document.getElementById('place-x').addEventListener('click', function () { dlg.close(); });
 })();
 </script>
 
