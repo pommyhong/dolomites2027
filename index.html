@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dolomites 2027</title>
-<meta name="description" content="แผนทริป Dolomites 10 วัน 4 คน 25 มิ.ย. - 4 ก.ค. 2027 เส้นทาง แผนรายวัน งบ และสิ่งที่ต้องจอง">
+<meta name="description" content="แผนทริป Dolomites 10 วัน สูงสุด 12 คน 25 มิ.ย. - 4 ก.ค. 2027 เส้นทาง แผนรายวัน งบ และสิ่งที่ต้องจอง">
 <meta property="og:title" content="Dolomites 2027">
-<meta property="og:description" content="แผนทริป 10 วัน 4 คน: Milan, Val Gardena, Cortina, Como">
+<meta property="og:description" content="แผนทริป 10 วัน สูงสุด 12 คน: Milan, Val Gardena, Cortina, Como">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pommyhong.github.io/dolomites2027/">
 <meta property="og:image" content="https://pommyhong.github.io/dolomites2027/og.png">
@@ -17,8 +17,9 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M5 42 8 20c1-5 6-6 8-1l3 23zM17 42 20 12c1-7 8-8 10-1l3 31zM32 42 34 24c1-4 6-4 7 0l2 18z' fill='%23B83D62'/%3E%3C/svg%3E">
 <style>*,*::before,*::after{box-sizing:border-box}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   .crew { display: flex; flex-direction: column; gap: 14px; }
-  .cars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  @media (max-width: 460px) { .cars { gap: 10px; } }
+  .cars { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
+  @media (max-width: 560px) { .cars { grid-template-columns: repeat(2, minmax(0, 1fr)); } .car:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); } }
+  @media (max-width: 460px) { .cars { gap: 10px; } .car:last-child:nth-child(odd) { width: calc(50% - 5px); } }
   .car { background: var(--paper); border: 1.5px solid var(--ink); border-radius: 34px 34px 16px 16px; padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 14px; }
   .car-h { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
   .wind { width: 62%; height: 10px; border-radius: 10px 10px 3px 3px; background: linear-gradient(180deg, #CBDCE0, #E3ECEE); border: 1px solid #B9CACE; }
@@ -221,7 +222,7 @@
 <div class="wrap">
 
   <header class="top">
-    <p class="kicker">ทริปเพื่อน 7-8 คน · 25 มิ.ย. - 4 ก.ค. 2027</p>
+    <p class="kicker">ทริปเพื่อน สูงสุด 12 คน · 25 มิ.ย. - 4 ก.ค. 2027</p>
     <h1>Dolomites</h1>
     <p class="route">Milan <i>→</i> Val Gardena <i>→</i> Cortina <i>→</i> Lake Como</p>
     <dl class="facts">
@@ -238,8 +239,8 @@
 
   <section class="crew" id="crew" aria-labelledby="crew-h">
     <h2 id="crew-h">ใครไปบ้าง</h2>
-    <p class="note">ยืนยันแล้ว 3 จาก 8 ที่นั่ง · รถ 2 คัน นั่งคันละ 4 คนพร้อมกระเป๋าใหญ่ · อัปเดต 29/09/2026</p>
-    <div class="cars"><div class="car"><div class="car-h"><span>คันที่ 1</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat ok"><span class="av" aria-hidden="true">P</span><b>Pom</b><small>ยืนยันแล้ว</small></li><li class="seat ok"><span class="av" aria-hidden="true">T</span><b>Top</b><small>ยืนยันแล้ว<br>เพื่อน Tmon</small></li><li class="seat ok"><span class="av" aria-hidden="true">B</span><b>Bask</b><small>ยืนยันแล้ว</small></li><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Tmon</b><small>น่าจะไป</small></li></ul></div><div class="car"><div class="car-h"><span>คันที่ 2</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Toro</b><small>น่าจะไป<br>รอวันลา</small></li><li class="seat maybe"><span class="av" aria-hidden="true">P</span><b>Pao</b><small>ยังไม่แน่</small></li><li class="seat maybe"><span class="av" aria-hidden="true">G</span><b>พี่ Great</b><small>ยังไม่แน่</small></li><li class="seat wait"><span class="av" aria-hidden="true">A</span><b>Art</b><small>รอคำตอบ</small></li></ul></div></div>
+    <p class="note">ยืนยันแล้ว 3 จาก 12 ที่นั่ง · รับได้สูงสุด 12 คน · รถ 3 คัน นั่งคันละ 4 คนพร้อมกระเป๋าใหญ่ · อัปเดต 04/10/2026</p>
+    <div class="cars"><div class="car"><div class="car-h"><span>คันที่ 1</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat ok"><span class="av" aria-hidden="true">P</span><b>Pom</b><small>ยืนยันแล้ว</small></li><li class="seat ok"><span class="av" aria-hidden="true">T</span><b>Top</b><small>ยืนยันแล้ว<br>เพื่อน Tmon</small></li><li class="seat ok"><span class="av" aria-hidden="true">B</span><b>Bask</b><small>ยืนยันแล้ว</small></li><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Tmon</b><small>น่าจะไป</small></li></ul></div><div class="car"><div class="car-h"><span>คันที่ 2</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Toro</b><small>น่าจะไป<br>รอวันลา</small></li><li class="seat maybe"><span class="av" aria-hidden="true">P</span><b>Pao</b><small>ยังไม่แน่</small></li><li class="seat maybe"><span class="av" aria-hidden="true">G</span><b>พี่ Great</b><small>ยังไม่แน่</small></li><li class="seat wait"><span class="av" aria-hidden="true">A</span><b>Art</b><small>รอคำตอบ</small></li></ul></div><div class="car"><div class="car-h"><span>คันที่ 3</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat likely"><span class="av" aria-hidden="true">ต</span><b>พี่โต</b><small>น่าจะไป</small></li><li class="seat likely"><span class="av" aria-hidden="true">อ</span><b>พี่อาท</b><small>น่าจะไป</small></li><li class="seat wait"><span class="av" aria-hidden="true">?</span><b>ที่ว่าง</b><small>รอคำตอบ</small></li><li class="seat wait"><span class="av" aria-hidden="true">?</span><b>ที่ว่าง</b><small>รอคำตอบ</small></li></ul></div></div>
     <ul class="legend">
       <li class="seat ok"><span class="av"></span>ยืนยันแล้ว</li><li class="seat likely"><span class="av"></span>น่าจะไป</li><li class="seat maybe"><span class="av"></span>ยังไม่แน่</li><li class="seat wait"><span class="av"></span>รอคำตอบ</li>
     </ul>
@@ -276,7 +277,7 @@
           <tr><td>ที่พัก Milan + Como 2 คืน</td><td class="num">5-6k</td><td class="est">ประมาณ</td></tr>
           <tr><td>ค่ากิน 9 วัน</td><td class="num">15-21k</td><td class="est">ประมาณ</td></tr>
           <tr><td>กระเช้า + ค่าเข้าทางเดิน</td><td class="num">6-8k</td><td class="est">ประมาณ</td></tr>
-          <tr><td>รถเช่า 2 คัน (คันละ 4 คน)</td><td class="num">3-7k</td><td class="ok">เช็กราคาแล้ว</td></tr>
+          <tr><td>รถเช่า 3 คัน (คันละ 4 คน)</td><td class="num">3-7k</td><td class="ok">เช็กราคาแล้ว</td></tr>
           <tr><td>วีซ่า + ประกันเดินทาง</td><td class="num">~5k</td><td class="est">ประมาณ</td></tr>
           <tr><td>น้ำมัน ทางด่วน ที่จอด</td><td class="num">3-4k</td><td class="est">ประมาณ</td></tr>
           <tr class="total"><td>รวม (ตั้งเป้าไม่เกิน 95k ต่อคน)</td><td class="num">79-96k</td><td></td></tr>
@@ -290,7 +291,7 @@
     <h2 id="book-h">ต้องจองเมื่อไหร่</h2>
     <div class="steps">
       <div class="step now"><div class="when">ต.ค.-ธ.ค. 2026<span class="now-pill">ถึงเวลาแล้ว</span></div><div class="what"><b>ที่พัก Dolomites แบบยกเลิกฟรี</b><small>ที่พักส่วนใหญ่ยังไม่เปิดให้จอง จะทยอยเปิดช่วงปลายปี</small></div></div>
-      <div class="step"><div class="when">ธ.ค. 2026-ม.ค. 2027</div><div class="what"><b>รถเช่า station wagon เกียร์ออโต้ 2 คัน</b><small>ใส่กระเป๋าใหญ่ได้ 4 ใบ · ยกเลิกฟรีได้ถึง 48 ชม.</small></div></div>
+      <div class="step"><div class="when">ธ.ค. 2026-ม.ค. 2027</div><div class="what"><b>รถเช่า station wagon เกียร์ออโต้ 3 คัน</b><small>ใส่กระเป๋าใหญ่ได้ 4 ใบ · ยกเลิกฟรีได้ถึง 48 ชม.</small></div></div>
       <div class="step"><div class="when">ธ.ค. 2026-มี.ค. 2027</div><div class="what"><b>ตั๋วเครื่องบิน และวีซ่า Schengen</b><small>ตั๋ว: เป้าหมาย 20-22k · วีซ่า: ซื้อประกันเดินทางก่อนยื่น</small></div></div>
       <div class="step"><div class="when">ม.ค.-มี.ค. 2027</div><div class="what"><b>ที่พัก Milan คืนแรก + Como คืนสุดท้าย</b></div></div>
       <div class="step"><div class="when">มี.ค.-เม.ย. 2027</div><div class="what"><b>The Last Supper</b><small>ตั๋วหมดในไม่กี่ชั่วโมงหลังเปิดขาย</small></div></div>
@@ -308,7 +309,7 @@
         <li>ช่วงบ่ายบนเขามักมีพายุ เดินเขาช่วงเช้าเสมอ</li>
       </ul></div>
       <div><h3>กระเป๋าและอากาศ</h3><ul>
-        <li>เช่ารถ station wagon 2 คัน คันละ 4 คน ใส่กระเป๋าใหญ่ได้คันละ 4 ใบ</li>
+        <li>เช่ารถ station wagon 3 คัน คันละ 4 คน ใส่กระเป๋าใหญ่ได้คันละ 4 ใบ</li>
         <li>ถ้าทุกคนใช้กระเป๋าขนาดกลาง เช่า SUV เล็กได้ ถูกกว่าราว 4k ต่อคน</li>
         <li>บนเขาราว 5-20°C แต่ Milan กับ Como ร้อนเกิน 30°C</li>
       </ul></div>
