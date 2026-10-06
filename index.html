@@ -134,6 +134,27 @@
   .ov-name { font-family: var(--body); font-weight: 600; font-size: 36px; fill: var(--ink); paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
   .ov-day { font-family: var(--display); font-weight: 700; font-size: 28px; fill: #fff; }
   .ov-zone { font-family: var(--body); font-weight: 600; font-size: 28px; fill: var(--muted); letter-spacing: .02em; }
+  .zmap { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "a b" "d c"; gap: 28px 36px; padding: 20px 20px 24px; background: linear-gradient(180deg, #F4F6F3, #E9EFE8 55%, #F4F6F3); border-radius: 22px; }
+  .zroad { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .zone { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .zone:nth-of-type(1) { grid-area: a; } .zone:nth-of-type(2) { grid-area: b; } .zone:nth-of-type(3) { grid-area: c; } .zone:nth-of-type(4) { grid-area: d; }
+  .zart { position: relative; }
+  .zart img { display: block; width: 100%; height: auto; transition: transform .35s cubic-bezier(.23,1,.32,1); }
+  .zart:hover img { transform: translateY(-6px); }
+  .zlab { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; align-items: center; color: inherit; text-decoration: none; padding: 0 4px; }
+  .zlab .zd { grid-row: span 2; min-width: 46px; height: 46px; padding: 0 8px; border-radius: 23px; background: var(--forest); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.01em; box-shadow: 0 0 0 3px #fff; transition: transform .2s cubic-bezier(.23,1,.32,1); }
+  .zlab b { font-family: var(--display); font-weight: 800; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.15; letter-spacing: -.02em; }
+  .zlab small { font-size: 13px; color: var(--muted); line-height: 1.4; }
+  .zlab small::after { content: " →"; color: var(--glow); }
+  .zlab:hover b, .zlab:focus-visible b { color: var(--glow); }
+  .zlab:hover .zd { transform: scale(1.06); }
+  .zmap .tag { scale: 1; opacity: 1; transition: scale .3s cubic-bezier(.23,1,.32,1), opacity .3s ease, background .15s ease, box-shadow .15s ease; }
+  .js .zmap:not(.in) .tag { scale: .6; opacity: 0; }
+  @media (max-width: 720px) {
+    .zmap { grid-template-columns: 1fr; grid-template-areas: "a" "b" "c" "d"; gap: 22px; padding: 14px 12px 18px; margin-inline: -8px; }
+    .zmap .tag { font-size: 11px; padding: 2px 8px 2px 6px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .zart img, .zlab .zd, .zmap .tag { transition: none; } .zart:hover img { transform: none; } .js .zmap:not(.in) .tag { scale: 1; opacity: 1; } }
 
   /* ---------- ask ---------- */
   .ask { display: flex; flex-direction: column; gap: 16px; }
@@ -280,8 +301,8 @@
 
   <section class="overview" id="map" aria-labelledby="map-h">
     <h2 id="map-h">แผนที่ทั้งทริป</h2>
-    <p class="note">ถนนเส้นเดียวเรียงตามวัน เริ่มมุมซ้ายบนแล้วเลื้อยลงมา แตะฉากไหนก็ได้เพื่อไปดูรายละเอียดวันนั้น</p>
-    <div class="ov-frame"><svg id="ov" viewBox="0 0 1200 1500" role="img" aria-label="แผนที่เส้นทาง 10 วัน จาก Milan ผ่าน Dolomites ถึง Como"></svg></div>
+    <p class="note">4 โซนเรียงตามเส้นทาง แตะป้ายบนภาพเพื่อดูรูปสถานที่จริง แตะชื่อโซนเพื่อไปดูแผนรายวัน</p>
+    <div class="zmap" id="zmap" aria-label="แผนที่เส้นทาง 10 วัน จาก Milan ผ่าน Dolomites ถึง Como"></div>
   </section>
 
   <section class="ask" id="ask" aria-labelledby="ask-h">
@@ -794,7 +815,7 @@
       ride: ['🚗', 'Verona → Como ราว 2.5 ชม.'],
       li: ['นอนในตัวเมือง Como ถูกกว่า Bellagio', 'เช้าวันบินนั่งเรือ หรือขึ้นรถราง Brunate ดูวิว'],
       chips: [['sleep', 'นอน Como'], ['', 'ทางเลือก: Stresa']],
-      img: { src: 'img/iso-como-cut.webp', w: 984, h: 866, tags: [[30.5, 47.8, 'วิลล่าริม Lake Como', 'como'], [52.4, 15.9, 'รถราง Brunate', 'brunate'], [59.8, 65.8, 'เรือข้ามทะเลสาบ', 'como']] } },
+      img: { src: 'img/iso2-como.webp', w: 1000, h: 720, tags: [[18, 22, 'วิลล่าริม Lake Como', 'como'], [41, 13, 'รถราง Brunate', 'brunate'], [49, 24, 'เรือข้ามทะเลสาบ', 'como']] } },
     { scene: 'home', day: 'DAY 10', title: 'บินกลับบ้าน',
       ride: ['🚗', 'Como → MXP ราว 1 ชม. คืนรถแล้วเช็กอิน'],
       li: ['เวลาบินกลับยังไม่ล็อก ถ้าบินบ่ายจะเที่ยวเช้านี้ได้เต็มๆ', 'ถึงกรุงเทพ จ. 5 ก.ค.'],
@@ -826,50 +847,60 @@
   root.innerHTML = html;
 
 
-  /* ================= one-picture overview ================= */
+  /* ================= four-zone overview ================= */
   (function () {
-    var ov = document.getElementById('ov'); if (!ov) return;
+    var root = document.getElementById('zmap'); if (!root) return;
+    document.documentElement.classList.add('js');
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var cols = [200, 600, 1000], rowsTop = [70, 420, 770, 1120], CW = 360, CH = 250;
-    var names = ['สนามบิน MXP', 'Milan', 'Lake Garda', 'Val di Funes', 'Seceda', 'Alpe di Siusi', 'Lagazuoi', 'Tre Cime', 'Lago di Braies', 'Verona', 'Lake Como', 'บินกลับ'];
-    var days = ['1', '2', '3', '3', '4', '5', '6', '7', '8', '9', '9', '10'];
-    function cell(i) { var r = Math.floor(i / 3), c = i % 3; if (r % 2) c = 2 - c; return { x: cols[c], y: rowsTop[r], r: r }; }
-    var cy = rowsTop.map(function (t) { return t + CH * .62; });
-    var road = 'M' + cols[0] + ' ' + cy[0] + ' L' + cols[2] + ' ' + cy[0] +
-      ' C1160 ' + cy[0] + ' 1160 ' + cy[1] + ' ' + cols[2] + ' ' + cy[1] + ' L' + cols[0] + ' ' + cy[1] +
-      ' C40 ' + cy[1] + ' 40 ' + cy[2] + ' ' + cols[0] + ' ' + cy[2] + ' L' + cols[2] + ' ' + cy[2] +
-      ' C1160 ' + cy[2] + ' 1160 ' + cy[3] + ' ' + cols[2] + ' ' + cy[3] + ' L' + cols[0] + ' ' + cy[3];
-    var out = '';
-    // zones
-    out += '<rect x="14" y="14" width="1172" height="352" rx="30" fill="#F4F6F3"/>';
-    out += '<rect x="14" y="380" width="1172" height="700" rx="30" fill="#E9EFE8"/>';
-    out += '<rect x="14" y="1094" width="1172" height="392" rx="30" fill="#F4F6F3"/>';
-    out += '<text class="ov-zone" x="44" y="56">Milan + Lake Garda</text>';
-    out += '<text class="ov-zone" x="44" y="422" style="fill:#23463A">DOLOMITES · นอน Ortisei 3 คืน แล้ว Cortina 3 คืน</text>';
-    out += '<text class="ov-zone" x="44" y="1136">ขากลับ: Verona + Como</text>';
-    // road
-    out += '<path d="' + road + '" fill="none" stroke="#C4CAC6" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>';
-    out += '<path d="' + road + '" fill="none" stroke="#D9DEDA" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"/>';
-    out += '<path d="' + road + '" fill="none" stroke="#fff" stroke-width="3" stroke-dasharray="14 14" stroke-linecap="round"/>';
-    // cells
-    STOPS.forEach(function (st, i) {
-      var c = cell(i), svg = st._svg;
-      var art = st.img ? '<image class="cell-art" href="' + st.img.src + '" x="' + (c.x - CW / 2) + '" y="' + (c.y - 40) + '" width="' + CW + '" height="' + (CH + 40) + '" preserveAspectRatio="xMidYMid meet"/>' : svg.replace('<svg class="iso"', '<svg class="cell-art" x="' + (c.x - CW / 2) + '" y="' + (c.y - 6) + '" width="' + CW + '" height="' + CH + '" preserveAspectRatio="xMidYMid meet"');
-      var ly = c.y + CH + 34;
-      var nw = names[i].length * 20 + 24;
-      out += '<a href="#d' + i + '" aria-label="วัน ' + days[i] + ' ' + names[i] + '">' +
-        '<rect class="cell-ring" x="' + (c.x - CW / 2) + '" y="' + (c.y - 10) + '" width="' + CW + '" height="' + (CH + 70) + '" rx="24" fill="transparent" stroke="transparent"/>' +
-        art +
-        '<circle cx="' + (c.x - nw / 2 - 12) + '" cy="' + (ly - 10) + '" r="27" fill="#23463A" stroke="#fff" stroke-width="4"/>' +
-        '<text class="ov-day" x="' + (c.x - nw / 2 - 12) + '" y="' + (ly - 1) + '" text-anchor="middle">' + days[i] + '</text>' +
-        '<text class="ov-name" x="' + (c.x - nw / 2 + 20) + '" y="' + ly + '">' + names[i] + '</text></a>';
+    var ZONES = [
+      { img: 'img/iso2-milan.webp', w: 1000, h: 704, day: '1–3', name: 'Milan', go: 'd1', sub: 'บินลง Malpensa · เที่ยวเมือง · ขาออกแวะ Lake Garda',
+        tags: [[44, 9, 'สนามบิน Malpensa', 'malpensa'], [54, 24, 'Duomo', 'duomo'], [16, 27, 'Castello Sforzesco', 'sforzesco'], [52, 50, 'Galleria', 'galleria'], [82, 55, 'Navigli', 'navigli'], [56, 69, 'Sirmione', 'sirmione']] },
+      { img: 'img/iso2-gardena.webp', w: 1000, h: 775, day: '3–5', name: 'Val Gardena', go: 'd3', sub: 'นอน Ortisei 3 คืน · Seceda · ปั่น e-bike Alpe di Siusi',
+        tags: [[56, 15, 'Seceda', 'seceda'], [42, 32, 'Ortisei', 'ortisei'], [86, 30, 'Sassolungo', 'sassolungo'], [70, 46, 'Alpe di Siusi', 'siusi'], [60, 59, 'Santa Maddalena', 'maddalena']] },
+      { img: 'img/iso2-cortina.webp', w: 1000, h: 775, day: '6–8', name: 'Cortina', go: 'd6', sub: 'นอน Cortina 3 คืน · Tre Cime · Lago di Braies',
+        tags: [[56, 17, 'Tre Cime', 'trecime'], [76, 25, 'Lagazuoi', 'lagazuoi'], [16, 41, 'Lago di Braies', 'braies'], [84, 41, 'Cinque Torri', 'cinquetorri'], [71, 54, 'Passo Giau', 'giau'], [53, 61, 'Cortina', '']] },
+      { img: 'img/iso2-como.webp', w: 1000, h: 720, day: '9–10', name: 'Lake Como', go: 'd9', sub: 'แวะ Verona · นอน Como 1 คืน · บินกลับ',
+        tags: [[18, 22, 'วิลล่าริมทะเลสาบ', 'como'], [41, 13, 'รถราง Brunate', 'brunate'], [69, 54, 'Arena di Verona', 'arena']] }
+    ];
+    var html = '<svg class="zroad" aria-hidden="true"></svg>';
+    ZONES.forEach(function (z) {
+      html += '<div class="zone"><div class="zart"><img src="' + z.img + '" alt="" width="' + z.w + '" height="' + z.h + '" loading="lazy">' +
+        z.tags.map(function (t, k) {
+          var st = 'left:' + t[0] + '%;top:' + t[1] + '%;transition-delay:' + (k * 60) + 'ms';
+          return t[3] ? '<button type="button" class="tag" data-place="' + t[3] + '" style="' + st + '">' + PIN + t[2] + CAM + '</button>'
+                      : '<span class="tag" style="' + st + '">' + PIN + t[2] + '</span>';
+        }).join('') +
+        '</div><a class="zlab" href="#' + z.go + '"><span class="zd">' + z.day + '</span><b>' + z.name + '</b><small>' + z.sub + '</small></a></div>';
     });
-    // car tracing the whole route
-    var car = '<g><g transform="translate(-23 -26)">' + CAR.replace('<svg viewBox="0 0 46 30">', '<svg width="46" height="30" viewBox="0 0 46 30">') + '</g>';
-    if (!reduce) car += '<animateMotion dur="16s" repeatCount="indefinite" path="' + road + '"/>';
-    else car = '<g transform="translate(' + cols[0] + ' ' + cy[0] + ')">' + car.slice(3);
-    out += car + '</g>';
-    ov.innerHTML = out;
+    root.innerHTML = html;
+    var road = root.querySelector('.zroad'), arts = [].slice.call(root.querySelectorAll('.zart'));
+    var carG = '<g transform="translate(-23 -26)">' + CAR.replace('<svg viewBox="0 0 46 30">', '<svg width="46" height="30" viewBox="0 0 46 30">') + '</g>';
+    function draw() {
+      var R = root.getBoundingClientRect();
+      var pts = arts.map(function (el) { var r = el.getBoundingClientRect(); return [r.left - R.left + r.width / 2, r.top - R.top + r.height * .55]; });
+      var oneCol = Math.abs(pts[0][0] - pts[1][0]) < 4;
+      var d = 'M' + pts[0][0] + ' ' + pts[0][1];
+      for (var i = 1; i < pts.length; i++) {
+        var p = pts[i - 1], q = pts[i];
+        if (oneCol) { var sx = (i % 2 ? 1 : -1) * R.width * .62; d += ' C' + (p[0] + sx) + ' ' + p[1] + ' ' + (q[0] + sx) + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
+        else if (Math.abs(p[1] - q[1]) < R.height * .2) d += ' L' + q[0] + ' ' + q[1];
+        else { var cx = Math.max(p[0], q[0]) + (R.width - Math.max(p[0], q[0])) * 1.1; d += ' C' + cx + ' ' + p[1] + ' ' + cx + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
+      }
+      road.setAttribute('viewBox', '0 0 ' + R.width + ' ' + R.height);
+      road.innerHTML = '<path d="' + d + '" fill="none" stroke="#C4CAC6" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="' + d + '" fill="none" stroke="#D9DEDA" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '<path d="' + d + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="12 12" stroke-linecap="round"/>' +
+        (reduce ? '<g transform="translate(' + pts[0][0] + ' ' + pts[0][1] + ')">' + carG + '</g>'
+                : '<g>' + carG + '<animateMotion dur="18s" repeatCount="indefinite" rotate="0" path="' + d + '"/></g>');
+    }
+    var imgs = [].slice.call(root.querySelectorAll('img')), left = imgs.length;
+    imgs.forEach(function (im) { if (im.complete) { if (!--left) draw(); } else im.addEventListener('load', function () { if (!--left) draw(); }); });
+    draw();
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 120); });
+    if ('IntersectionObserver' in window && !reduce) {
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { root.classList.add('in'); io.disconnect(); } }); }, { threshold: .15 });
+      io.observe(root);
+    } else root.classList.add('in');
   })();
 
   /* ================= road connectors ================= */
