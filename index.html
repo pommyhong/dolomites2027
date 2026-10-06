@@ -169,6 +169,20 @@
 
   /* ---------- journey ---------- */
   .journey { display: flex; flex-direction: column; }
+  .chap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; padding-top: 28px; margin-top: 36px; border-top: 1px solid var(--ink); }
+  .chap:first-child { margin-top: 8px; }
+  .chap-k { margin: 0; font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .12em; color: var(--glow); }
+  .chap-h { margin: 2px 0 0; font-family: var(--display); font-weight: 800; font-size: clamp(30px, 4.4vw, 44px); line-height: 1.05; letter-spacing: -.025em; }
+  .chap-sub { margin: 6px 0 4px; font-size: 14px; color: var(--muted); }
+  .chap-art .zart { margin-top: 6px; }
+  .chap-days .stop { display: block; padding: 24px 0; border-top: 1px solid var(--line); }
+  .chap-days .stop:first-child { border-top: 0; padding-top: 4px; }
+  @media (min-width: 900px) {
+    .chap { grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr); gap: 52px; align-items: start; }
+    .chap-art { align-self: stretch; }
+    .chap-sticky { position: sticky; top: 64px; }
+    .chap-days .stop:first-child { padding-top: 0; }
+  }
   .journey-h { margin-bottom: 8px; }
   .stop { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: center; }
   .stop-art { position: relative; width: 100%; max-width: 500px; justify-self: center; }
@@ -855,11 +869,32 @@
   var TRAIN = '<svg viewBox="0 0 54 30"><ellipse cx="27" cy="27" rx="22" ry="2.6" fill="rgba(46,63,76,.18)"/><path d="M4 22V10c0-3 2-5 5-5h32c5 0 9 5 9 11v6z" fill="#F4F7F9" stroke="rgba(46,63,76,.5)"/><path d="M4 16h46v3H4z" fill="#3E9A6B"/><path d="M8 8h8v5H8zM19 8h8v5h-8zM30 8h8v5h-8zM41 8c4 0 6 2 7 5h-7z" fill="#9ED3EC"/><circle cx="13" cy="24" r="2.5" fill="#3A4852"/><circle cx="40" cy="24" r="2.5" fill="#3A4852"/></svg>';
 
   /* ================= build ================= */
+  var ZONES = [
+    { img: 'img/iso2-milan.webp', w: 1000, h: 704, day: '1–3', name: 'Milan', go: 'd1', sub: 'บินลง Malpensa · เที่ยวเมือง · ขาออกแวะ Lake Garda',
+      tags: [[44, 9, 'สนามบิน Malpensa', 'malpensa'], [54, 24, 'Duomo', 'duomo'], [21, 27, 'Castello Sforzesco', 'sforzesco'], [52, 50, 'Galleria', 'galleria'], [82, 55, 'Navigli', 'navigli'], [56, 69, 'Sirmione', 'sirmione']] },
+    { img: 'img/iso2-gardena.webp', w: 1000, h: 775, day: '3–5', name: 'Val Gardena', go: 'd3', sub: 'นอน Ortisei 3 คืน · Seceda · ปั่น e-bike Alpe di Siusi',
+      tags: [[56, 15, 'Seceda', 'seceda'], [42, 32, 'Ortisei', 'ortisei'], [86, 30, 'Sassolungo', 'sassolungo'], [70, 46, 'Alpe di Siusi', 'siusi'], [60, 59, 'Santa Maddalena', 'maddalena']] },
+    { img: 'img/iso2-cortina.webp', w: 1000, h: 775, day: '6–8', name: 'Cortina', go: 'd6', sub: 'นอน Cortina 3 คืน · Tre Cime · Lago di Braies',
+      tags: [[56, 17, 'Tre Cime', 'trecime'], [76, 25, 'Lagazuoi', 'lagazuoi'], [16, 41, 'Lago di Braies', 'braies'], [84, 41, 'Cinque Torri', 'cinquetorri'], [71, 54, 'Passo Giau', 'giau'], [53, 61, 'Cortina', '']] },
+    { img: 'img/iso2-como.webp', w: 1000, h: 720, day: '9–10', name: 'Lake Como', go: 'd9', sub: 'แวะ Verona · นอน Como 1 คืน · บินกลับ',
+      tags: [[18, 22, 'วิลล่าริมทะเลสาบ', 'como'], [41, 13, 'รถราง Brunate', 'brunate'], [69, 54, 'Arena di Verona', 'arena']] }
+  ];
+  var ZONE_OF = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
+  function zoneArt(z) {
+    return '<div class="zart"><img src="' + z.img + '" alt="" width="' + z.w + '" height="' + z.h + '" loading="lazy">' +
+      z.tags.map(function (t, k) {
+        var st = 'left:' + t[0] + '%;top:' + t[1] + '%;transition-delay:' + (k * 60) + 'ms';
+        return t[3] ? '<button type="button" class="tag" data-place="' + t[3] + '" style="' + st + '">' + PIN + t[2] + CAM + '</button>'
+                    : '<span class="tag" style="' + st + '">' + PIN + t[2] + '</span>';
+      }).join('') + '</div>';
+  }
   var root = document.getElementById('journey');
   var html = '';
   STOPS.forEach(function (st, i) {
-    if (i > 0) html += '<div class="link" data-kind="' + (st.link || 'car') + '" data-i="' + i + '"></div>';
-    var sc = st.img ? imgArt(st.img) : SCENES[st.scene]().render(); st._svg = st.img ? null : sc.slice(0, sc.indexOf('</svg>') + 6);
+    var zn = ZONE_OF[i], first = i === 0 || ZONE_OF[i - 1] !== zn, last = i === STOPS.length - 1 || ZONE_OF[i + 1] !== zn, z = ZONES[zn];
+    if (first) html += '<section class="chap" aria-labelledby="chap' + zn + '"><div class="chap-art"><div class="chap-sticky">' +
+      '<p class="chap-k">บทที่ ' + (zn + 1) + ' · วัน ' + z.day + '</p><h3 class="chap-h" id="chap' + zn + '">' + z.name + '</h3><p class="chap-sub">' + z.sub + '</p>' +
+      zoneArt(z) + '</div></div><div class="chap-days">';
     var chips = st.chips.map(function (c) { return '<span class="chip ' + c[0] + '">' + c[1] + '</span>'; }).join('');
     var box = st.box ? '<div class="box"><h4>' + st.box.h + '</h4><div class="foods">' + st.box.foods.map(function (f) { return '<div class="food"><span>' + f[1] + '</span><small>' + f[2] + '</small></div>'; }).join('') + '</div></div>' : '';
     var eat = st.eat ? '<div class="eat"><h4>กินที่ไหนดี</h4><ul>' + st.eat.map(function (e) {
@@ -867,12 +902,12 @@
       return '<li><span class="meal">' + e[0] + '</span><div>' + nm + '<small>' + e[3] + '</small>' + (e[4] ? '<em>' + e[4] + '</em>' : '') + '</div></li>';
     }).join('') + '</ul></div>' : '';
     var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<button type="button" class="tag" data-place="giau" style="left:30%;top:30%">' + PIN + 'Passo Giau' + CAM + '</button><button type="button" class="tag" data-place="cinquetorri" style="left:70%;top:36%">' + PIN + 'Cinque Torri' + CAM + '</button></div>' : '';
-    html += '<article class="stop' + (i % 2 ? ' flip' : '') + '" id="d' + i + '">' +
-      '<figure class="stop-art" style="margin:0">' + sc + '</figure>' +
+    html += '<article class="stop" id="d' + i + '">' +
       '<div class="stop-text"><h3 class="day-h"><small>' + st.day.toUpperCase() + '</small>' + st.title + '</h3>' +
       '<div class="ride"><span>' + st.ride[1] + '</span></div>' +
       '<ul>' + st.li.map(function (x) { return '<li>' + PIN + '<span>' + x + '</span></li>'; }).join('') + '</ul>' +
       (chips ? '<div class="chips">' + chips + '</div>' : '') + box + eat + sunset + '</div></article>';
+    if (last) html += '</div></section>';
   });
   root.innerHTML = html;
 
@@ -882,25 +917,9 @@
     var root = document.getElementById('zmap'); if (!root) return;
     document.documentElement.classList.add('js');
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var ZONES = [
-      { img: 'img/iso2-milan.webp', w: 1000, h: 704, day: '1–3', name: 'Milan', go: 'd1', sub: 'บินลง Malpensa · เที่ยวเมือง · ขาออกแวะ Lake Garda',
-        tags: [[44, 9, 'สนามบิน Malpensa', 'malpensa'], [54, 24, 'Duomo', 'duomo'], [16, 27, 'Castello Sforzesco', 'sforzesco'], [52, 50, 'Galleria', 'galleria'], [82, 55, 'Navigli', 'navigli'], [56, 69, 'Sirmione', 'sirmione']] },
-      { img: 'img/iso2-gardena.webp', w: 1000, h: 775, day: '3–5', name: 'Val Gardena', go: 'd3', sub: 'นอน Ortisei 3 คืน · Seceda · ปั่น e-bike Alpe di Siusi',
-        tags: [[56, 15, 'Seceda', 'seceda'], [42, 32, 'Ortisei', 'ortisei'], [86, 30, 'Sassolungo', 'sassolungo'], [70, 46, 'Alpe di Siusi', 'siusi'], [60, 59, 'Santa Maddalena', 'maddalena']] },
-      { img: 'img/iso2-cortina.webp', w: 1000, h: 775, day: '6–8', name: 'Cortina', go: 'd6', sub: 'นอน Cortina 3 คืน · Tre Cime · Lago di Braies',
-        tags: [[56, 17, 'Tre Cime', 'trecime'], [76, 25, 'Lagazuoi', 'lagazuoi'], [16, 41, 'Lago di Braies', 'braies'], [84, 41, 'Cinque Torri', 'cinquetorri'], [71, 54, 'Passo Giau', 'giau'], [53, 61, 'Cortina', '']] },
-      { img: 'img/iso2-como.webp', w: 1000, h: 720, day: '9–10', name: 'Lake Como', go: 'd9', sub: 'แวะ Verona · นอน Como 1 คืน · บินกลับ',
-        tags: [[18, 22, 'วิลล่าริมทะเลสาบ', 'como'], [41, 13, 'รถราง Brunate', 'brunate'], [69, 54, 'Arena di Verona', 'arena']] }
-    ];
     var html = '<svg class="zroad" aria-hidden="true"></svg>';
     ZONES.forEach(function (z) {
-      html += '<div class="zone"><div class="zart"><img src="' + z.img + '" alt="" width="' + z.w + '" height="' + z.h + '" loading="lazy">' +
-        z.tags.map(function (t, k) {
-          var st = 'left:' + t[0] + '%;top:' + t[1] + '%;transition-delay:' + (k * 60) + 'ms';
-          return t[3] ? '<button type="button" class="tag" data-place="' + t[3] + '" style="' + st + '">' + PIN + t[2] + CAM + '</button>'
-                      : '<span class="tag" style="' + st + '">' + PIN + t[2] + '</span>';
-        }).join('') +
-        '</div><a class="zlab" href="#' + z.go + '"><span class="zd">' + z.day + '</span><b>' + z.name + '</b><small>' + z.sub + '</small></a></div>';
+      html += '<div class="zone">' + zoneArt(z) + '<a class="zlab" href="#' + z.go + '"><span class="zd">' + z.day + '</span><b>' + z.name + '</b><small>' + z.sub + '</small></a></div>';
     });
     root.innerHTML = html;
     var road = root.querySelector('.zroad'), arts = [].slice.call(root.querySelectorAll('.zart'));
