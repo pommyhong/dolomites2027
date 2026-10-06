@@ -188,6 +188,19 @@
   .chip.sleep { background: var(--forest); border-color: var(--forest); color: #fff; }
   .chip.book { background: var(--warn-soft); border-color: #E7D3AE; color: var(--warn); }
   .chip.hike { background: var(--forest-soft); border-color: #C9D9CD; color: var(--forest); }
+  .eat { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .eat h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
+  .eat ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+  .eat li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .eat .meal { margin-top: 2px; text-align: center; font-size: 11.5px; font-weight: 600; line-height: 1.8; border-radius: 10px; background: var(--glow-soft); color: var(--glow); }
+  .eat li > div { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .eat a, .eat b { font-family: var(--display); font-weight: 700; font-size: 16px; line-height: 1.35; letter-spacing: -.01em; color: var(--ink); text-decoration: none; }
+  .eat a { background: linear-gradient(var(--glow), var(--glow)) 0 100% / 0 1.5px no-repeat; transition: background-size .25s cubic-bezier(.23,1,.32,1), color .15s ease; justify-self: start; width: fit-content; }
+  .eat a:hover, .eat a:focus-visible { color: var(--glow); background-size: 100% 1.5px; }
+  .eat a span { color: var(--glow); font-size: 13px; }
+  .eat small { font-size: 13.5px; color: var(--ink); line-height: 1.5; }
+  .eat em { font-style: normal; font-size: 12.5px; color: var(--warn); line-height: 1.45; }
+  @media (prefers-reduced-motion: reduce) { .eat a { transition: none; } }
   .box { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
   .box h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .02em; }
   .foods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -316,7 +329,7 @@
     </div>
   </section>
 
-  <section aria-labelledby="journey-h"><h2 id="journey-h" class="journey-h">รายวัน</h2><p class="note" style="margin-bottom:16px">แตะป้ายชื่อสถานที่บนภาพเพื่อดูรูปถ่ายจริง</p><div class="journey" id="journey"></div></section>
+  <section aria-labelledby="journey-h"><h2 id="journey-h" class="journey-h">รายวัน</h2><p class="note" style="margin-bottom:16px">แตะป้ายชื่อสถานที่บนภาพเพื่อดูรูปถ่ายจริง · แตะชื่อร้านเพื่อเปิดใน Google Maps (ร้านกับวันปิดเช็กจากเว็บ 06/10/2026 ใกล้วันไปค่อยเช็กอีกรอบ)</p><div class="journey" id="journey"></div></section>
 
   <section class="panel" id="budget" aria-labelledby="budget-h">
     <h2 id="budget-h">งบต่อคน</h2>
@@ -776,44 +789,57 @@
     { scene: 'milan', day: 'DAY 2', title: 'เที่ยวเมือง Milan', link: 'train',
       ride: ['🚆', 'รถไฟ Malpensa Express สนามบิน → Milan ราว 50 นาที'],
       li: ['11:00 ฝากกระเป๋าที่โรงแรม · 11:30 Duomo ขึ้นดาดฟ้า และ Galleria', '14:30 Castello Sforzesco ลานด้านในเข้าฟรี ดูพิพิธภัณฑ์ราว 1 ชม.', '16:00 เดิน 10 นาทีไป Pinacoteca di Brera ใช้เวลาราว 1.5 ชม.', '19:00 คลอง Navigli สั่ง aperitivo กินแทนมื้อเย็น'],
+      eat: [["เที่ยง", "Luini", "Panzerotti Luini Via Santa Radegonda Milano", "ปันเซรอตติทอด ไส้มอซซาเรลลา-มะเขือเทศ ชิ้นละราว €3 · อยู่หลัง Duomo พอดี", "ไม่มีที่นั่ง ซื้อแล้วยืนกิน · คิวยาวแต่เดินเร็ว · ปิดวันอาทิตย์"], ["ดื่ม", "Mag Cafè", "Mag Cafe Ripa di Porta Ticinese Milano", "aperitivo ริมคลอง Navigli · ค็อกเทลราว €12-18 มีแฮม ชีส ขนมปังมาด้วย", "ไป 12 คนควรจองก่อน"], ["เย็น", "Trattoria Milanese", "Trattoria Milanese Via Santa Marta Milano", "ร้านเก่าตั้งแต่ปี 1933 · สั่ง Risotto alla Milanese, Cotoletta, Ossobuco", "ต้องจอง โต๊ะเต็มบ่อย · ปิดวันอาทิตย์"]],
       chips: [['sleep', 'นอน Milan'], ['book', 'จองดาดฟ้า Duomo'], ['book', 'จองตั๋ว Brera']],
       box: { h: 'ของกินแนะนำใน Milan', foods: [['🍛', 'Risotto alla Milanese', 'ริซอตโต้หญ้าฝรั่น'], ['🥩', 'Cotoletta', 'หมูชุบเกล็ดขนมปัง'], ['🍹', 'Aperitivo', 'ดื่ม 1 แก้วได้กินกับแกล้ม']] } },
     { scene: 'garda', day: 'DAY 3', title: 'รับรถ แวะ Lake Garda',
       ride: ['🚗', 'รับรถในเมือง Milan → Sirmione ราว 1.5 ชม.'],
       li: ['กินเที่ยงริม Lake Garda', 'เดินดูปราสาทริมน้ำ Sirmione'],
+      eat: [["เที่ยง", "Trattoria La Fiasca", "Trattoria La Fiasca Sirmione", "ในเมืองเก่า Sirmione · เด่นปลาจากทะเลสาบ เช่น tagliolini ปลาเพิร์ช tortelli ปลาไพค์", "วันอาทิตย์เปิด (ปิดวันพุธ) · จองโต๊ะ 12 คนก่อน"]],
       chips: [['', 'ขับ ~1.5 ชม.']] },
     { scene: 'funes', day: 'DAY 3 เย็น', title: 'Val di Funes → Ortisei',
       ride: ['🚗', 'Sirmione → Val di Funes ราว 2.5 ชม. อยู่ทางเข้า Val Gardena พอดี'],
       li: ['ถ่ายรูปโบสถ์ Santa Maddalena ตอนแดดเย็น', 'ถึง Ortisei ราว 18:00 แวะซูเปอร์มาร์เก็ตซื้อของเข้าที่พัก'],
+      eat: [["เย็น", "Mauriz Keller", "Mauriz Keller Ortisei", "ร้านชั้นใต้ดินกลางถนนคนเดิน Ortisei ที่กว้าง รับกลุ่มใหญ่ได้ · พิซซ่าเตาฟืน + อาหาร Ladin จานใหญ่มาก แบ่งกันกินได้", "เหมาะคืนแรกที่เหนื่อยจากขับรถทั้งวัน"]],
       chips: [['sleep', 'ฐาน 1: Ortisei 3 คืน'], ['book', 'จองที่พัก ต.ค.-ธ.ค. 2026']] },
     { scene: 'seceda', day: 'DAY 4', title: 'Seceda',
       ride: ['🚡', 'กระเช้าจากตัวเมือง Ortisei ขึ้นถึงสันเขา'],
       li: ['ขึ้นกระเช้าตั้งแต่เช้า คนน้อย วิวชัด', 'เดินจาก Seceda ผ่าน Pieralongia ไป Col Raiser ส่วนใหญ่เป็นทางลง', 'นั่งกระเช้าลง ต่อรถบัสกลับ ช่วงบ่ายพัก'],
+      eat: [["เที่ยง", "Baita Sofie", "Baita Sofie Seceda", "กระท่อมใกล้ยอด Seceda · นั่งกินวิวสันเขา", ""], ["เที่ยง", "Malga Pieralongia", "Malga Pieralongia Val Gardena", "กระท่อมฟาร์มกลางทาง ใต้หิน Pieralongia · อาหาร South Tyrol บ้านๆ", "ครัวปิด 14:30 อย่าเดินช้า"], ["เย็น", "Tubladel", "Ristorante Tubladel Ortisei", "มื้อพิเศษ · อาหาร South Tyrol แบบประณีต (Michelin Plate) เช่น เนื้อกวาง ขาหมูอบ", "จองล่วงหน้า · ปิดวันอังคาร คืนนี้ (วันจันทร์) เลยเหมาะ"]],
       chips: [['hike', 'เดิน 2.5-3 ชม. · ง่าย-กลาง'], ['', '2,519 ม.']] },
     { scene: 'siusi', day: 'DAY 5', title: 'ปั่น e-bike ที่ Alpe di Siusi',
       ride: ['🚡', 'ขับรถราว 25-30 นาทีไป Siusi แล้วนั่งกระเช้า Seiser Alm Bahn ขึ้นไป Compatsch'],
       li: ['รับ e-bike ที่ร้านเช่าใน Compatsch (Sport Hans หรือ Alpincenter) หรือที่สถานีบนของกระเช้า', 'ปั่นเข้าทุ่งไปทาง Saltria ใกล้ภูเขา Sassolungo ช่วงกลางวันห้ามรถส่วนตัว ถนนโล่ง', 'แวะกินเที่ยงที่กระท่อมบนทุ่ง แล้วปั่นกลับคืนรถก่อนบ่ายแก่ ช่วงนั้นมักมีพายุ', 'ตอนเย็นกลับ Ortisei ทำอาหารเย็นกินเอง'],
+      eat: [["เที่ยง", "Gostner Schwaige", "Gostner Schwaige Alpe di Siusi", "ซุปหญ้าแห้งกับดอกไม้ภูเขา (Heusuppe) เสิร์ฟในชามขนมปัง ของขึ้นชื่อ · ทำชีสเอง", ""], ["เที่ยง", "Baita Sanon", "Sanon Hutte Alpe di Siusi", "วิว Sassolungo เต็มๆ · อาหาร South Tyrol และ Ladin · ปั่น e-bike ไปถึงง่าย", ""], ["เย็น", "ทำกินเองที่อพาร์ตเมนต์", "", "ซื้อ speck ชีส ขนมปังจากซูเปอร์มาร์เก็ตในเมือง", ""]],
       chips: [['hike', 'ปั่น e-bike ครึ่งวัน · ง่าย'], ['book', 'จอง e-bike ตามจำนวนคน'], ['', '~1,800-2,300 ม.']],
       box: { h: 'ของกินบนเขา (South Tyrol)', foods: [['🥟', 'Canederli', 'ก้อนขนมปังต้มในซุป'], ['🥓', 'Speck', 'แฮมรมควันท้องถิ่น'], ['🍎', 'Apfelstrudel', 'พายแอปเปิล']] } },
     { scene: 'passes', day: 'DAY 6', title: 'ข้ามช่องเขาไป Cortina',
       ride: ['🚗', 'Passo Sella → Passo Pordoi → Passo Falzarego ขับจริงราว 2 ชม. แวะทั้งวัน'],
       li: ['วันขับรถวิวสวยที่สุดของทริป', 'นั่งกระเช้าขึ้น Lagazuoi กินเที่ยงที่กระท่อมบนยอด', 'ถึง Cortina ช่วงบ่ายแก่'],
+      eat: [["เที่ยง", "Rifugio Lagazuoi", "Rifugio Lagazuoi", "กระท่อมบนยอด 2,752 ม. ระเบียงนั่งได้ 200 คน · กนอคคี โพเลนต้า กูลาช สตรูเดิล", ""], ["เย็น", "La Tavernetta", "La Tavernetta Via del Castello Cortina", "ร้านท้องถิ่นสบายๆ · พิซซ่า + Casunziei ราวีโอลี่ไส้บีทรูทของ Cortina", ""]],
       chips: [['sleep', 'ฐาน 2: Cortina 3 คืน'], ['', '2,752 ม.']] },
     { scene: 'trecime', day: 'DAY 7', title: 'Tre Cime',
       ride: ['🚗', 'ออก 07:00 ขับราว 45 นาทีไป Rifugio Auronzo'],
       li: ['เดินรอบเขา Auronzo → Lavaredo → Locatelli → กลับจุดเริ่ม', 'ช่วงบ่ายนั่งพักริม Lago di Misurina'],
+      box: { h: 'ของกินฝั่ง Cortina', foods: [['', 'Casunziei', 'ราวีโอลี่ไส้บีทรูท ราดเนยกับเมล็ดป๊อปปี้'], ['', 'Polenta', 'ข้าวโพดบด กินกับเห็ดหรือชีส'], ['', 'Strudel', 'พายแอปเปิล ของหวานทุกกระท่อม']] },
+      eat: [["เที่ยง", "Rifugio Locatelli", "Rifugio Locatelli Tre Cime", "กระท่อมหน้า Tre Cime พอดี · ซุปข้าวบาร์เลย์ Knödel (ก้อนขนมปังต้ม) จานละราว €15-20", "บริการตัวเอง จ่ายเงินสดเท่านั้น · หน้าร้อนคนแน่นมาก หรือห่อข้าวไปนั่งกินบนทุ่ง"], ["เย็น", "El Brite de Larieto", "El Brite de Larieto Cortina", "มื้อพิเศษ · ร้านในฟาร์มกลางป่าสนนอกเมือง ใช้ชีส เนย และเนื้อแปรรูปจากฟาร์มตัวเอง", "จองล่วงหน้า · อยู่นอกเมือง ต้องขับรถไป"]],
       chips: [['book', 'จองรอบเข้าถนน · ~€40/คัน'], ['hike', '10 กม. · 3.5-4 ชม.']] },
     { scene: 'braies', day: 'DAY 8', title: 'Lago di Braies + พระอาทิตย์ตก',
       ride: ['🚗', 'ออกเช้ามืด ขับราว 1 ชม. ไปถึงก่อน 08:00'],
       li: ['เดินรอบทะเลสาบ หรือเช่าเรือพาย', 'ช่วงบ่ายขึ้นกระเช้า Cinque Torri ดูพิพิธภัณฑ์กลางแจ้งสงครามโลกครั้งที่ 1', 'ตอนเย็นดูพระอาทิตย์ตกที่ Passo Giau'],
+      eat: [["เที่ยง", "Rifugio Scoiattoli", "Rifugio Scoiattoli Cinque Torri", "กระท่อมหน้า Cinque Torri ครอบครัวทำเอง · โพเลนต้ากับเห็ด กนอคคี มีเมนูมังสวิรัติ", ""], ["เย็น", "ทำกินเอง หรือซื้อพิซซ่ากลับที่พัก", "", "กลับจากดูพระอาทิตย์ตกที่ Passo Giau ค่อนข้างดึก", ""]],
       chips: [['book', 'เช็กว่าต้องจองที่จอด Braies ไหม']], sunset: true },
     { scene: 'verona', day: 'DAY 9', title: 'ขับกลับ แวะ Verona',
       ride: ['🚗', 'Cortina → Verona ราว 2.5 ชม.'],
       li: ['ดู Arena กับบ้านจูเลียต ราว 2 ชม.', 'ขับต่อราว 2.5 ชม. ไป Como'],
+      box: { h: 'ของกิน Verona', foods: [['', 'Risotto all\'Amarone', 'ริซอตโต้ไวน์แดงท้องถิ่น'], ['', 'Bigoli', 'เส้นหนา ซอสเป็ดหรือเนื้อ'], ['', 'Pandoro', 'เค้กรูปดาว เกิดที่ Verona']] },
+      eat: [["เที่ยง", "Trattoria Al Bersagliere", "Trattoria Al Bersagliere Verona", "เดินจาก Arena ไม่ไกล · Michelin Bib Gourmand · Risotto all'Amarone, Bigoli ซอสเป็ด", "เที่ยงเปิด 12:00-14:00 · ปิดอาทิตย์-จันทร์ (วันนี้วันเสาร์ เปิด) · จองก่อน"]],
       chips: [['', 'ขับ ~5 ชม. ทั้งวัน']] },
     { scene: 'como', day: 'DAY 9 เย็น', title: 'Lake Como',
       ride: ['🚗', 'Verona → Como ราว 2.5 ชม.'],
       li: ['นอนในตัวเมือง Como ถูกกว่า Bellagio', 'เช้าวันบินนั่งเรือ หรือขึ้นรถราง Brunate ดูวิว'],
+      box: { h: 'ของกิน Lake Como', foods: [['', 'Risotto con pesce persico', 'ริซอตโต้กับปลาเพิร์ชทอดเนย'], ['', 'Missoltini', 'ปลาตากแห้งของทะเลสาบ กินกับโพเลนต้า'], ['', 'Aperitivo ริมทะเลสาบ', 'ก่อนมื้อเย็น']] },
+      eat: [["เย็น", "Ristorante Sociale", "Ristorante Sociale Via Rodari Como", "ร้านท้องถิ่นใกล้ Duomo Como ราคาไม่แรง · Risotto กับปลาเพิร์ชทอดเนย ราว €12-15", "ปิดวันอังคาร · จองโต๊ะ 12 คน"]],
       chips: [['sleep', 'นอน Como'], ['', 'ทางเลือก: Stresa']],
       img: { src: 'img/iso2-como.webp', w: 1000, h: 720, tags: [[18, 22, 'วิลล่าริม Lake Como', 'como'], [41, 13, 'รถราง Brunate', 'brunate'], [49, 24, 'เรือข้ามทะเลสาบ', 'como']] } },
     { scene: 'home', day: 'DAY 10', title: 'บินกลับบ้าน',
@@ -836,13 +862,17 @@
     var sc = st.img ? imgArt(st.img) : SCENES[st.scene]().render(); st._svg = st.img ? null : sc.slice(0, sc.indexOf('</svg>') + 6);
     var chips = st.chips.map(function (c) { return '<span class="chip ' + c[0] + '">' + c[1] + '</span>'; }).join('');
     var box = st.box ? '<div class="box"><h4>' + st.box.h + '</h4><div class="foods">' + st.box.foods.map(function (f) { return '<div class="food"><span>' + f[1] + '</span><small>' + f[2] + '</small></div>'; }).join('') + '</div></div>' : '';
+    var eat = st.eat ? '<div class="eat"><h4>กินที่ไหนดี</h4><ul>' + st.eat.map(function (e) {
+      var nm = e[2] ? '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(e[2]) + '" target="_blank" rel="noopener">' + e[1] + '<span aria-hidden="true"> ↗</span></a>' : '<b>' + e[1] + '</b>';
+      return '<li><span class="meal">' + e[0] + '</span><div>' + nm + '<small>' + e[3] + '</small>' + (e[4] ? '<em>' + e[4] + '</em>' : '') + '</div></li>';
+    }).join('') + '</ul></div>' : '';
     var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<button type="button" class="tag" data-place="giau" style="left:30%;top:30%">' + PIN + 'Passo Giau' + CAM + '</button><button type="button" class="tag" data-place="cinquetorri" style="left:70%;top:36%">' + PIN + 'Cinque Torri' + CAM + '</button></div>' : '';
     html += '<article class="stop' + (i % 2 ? ' flip' : '') + '" id="d' + i + '">' +
       '<figure class="stop-art" style="margin:0">' + sc + '</figure>' +
       '<div class="stop-text"><h3 class="day-h"><small>' + st.day.toUpperCase() + '</small>' + st.title + '</h3>' +
       '<div class="ride"><span>' + st.ride[1] + '</span></div>' +
       '<ul>' + st.li.map(function (x) { return '<li>' + PIN + '<span>' + x + '</span></li>'; }).join('') + '</ul>' +
-      (chips ? '<div class="chips">' + chips + '</div>' : '') + box + sunset + '</div></article>';
+      (chips ? '<div class="chips">' + chips + '</div>' : '') + box + eat + sunset + '</div></article>';
   });
   root.innerHTML = html;
 
