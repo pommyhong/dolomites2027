@@ -17,29 +17,60 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M5 42 8 20c1-5 6-6 8-1l3 23zM17 42 20 12c1-7 8-8 10-1l3 31zM32 42 34 24c1-4 6-4 7 0l2 18z' fill='%23B83D62'/%3E%3C/svg%3E">
 <style>*,*::before,*::after{box-sizing:border-box}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   .crew { display: flex; flex-direction: column; gap: 14px; }
-  .cars { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; }
-  @media (max-width: 560px) { .cars { grid-template-columns: repeat(2, minmax(0, 1fr)); } .car:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 8px); } }
-  @media (max-width: 460px) { .cars { gap: 10px; } .car:last-child:nth-child(odd) { width: calc(50% - 5px); } }
-  .car { background: var(--paper); border: 1.5px solid var(--ink); border-radius: 34px 34px 16px 16px; padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 14px; }
-  .car-h { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
-  .wind { width: 62%; height: 10px; border-radius: 10px 10px 3px 3px; background: linear-gradient(180deg, #CBDCE0, #E3ECEE); border: 1px solid #B9CACE; }
-  .seats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 10px; }
-  .seat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; }
-  .seat .av { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 22px; margin-bottom: 4px; transition: transform .2s cubic-bezier(.16,1,.3,1); }
-  .seat:hover .av { transform: translateY(-3px); }
-  .seat b { font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.01em; line-height: 1.2; }
-  .seat small { font-size: 12px; color: var(--muted); line-height: 1.35; }
-  .seat.ok .av { background: var(--forest); color: #fff; }
-  .seat.ok small { color: var(--forest); font-weight: 500; }
-  .seat.likely .av { background: var(--forest-soft); color: var(--forest); box-shadow: inset 0 0 0 1.5px #7FA08A; }
-  .seat.maybe .av { background: var(--warn-soft); color: var(--warn); box-shadow: inset 0 0 0 1.5px #D9B45E; }
-  .seat.wait .av { background: transparent; color: var(--muted); border: 1.5px dashed #A8B1AC; }
-  .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); }
-  .legend .seat { flex-direction: row; gap: 7px; }
-  @media (max-width: 460px) { .car { padding: 12px 10px 16px; border-radius: 28px 28px 14px 14px; } .seat .av { width: 44px; height: 44px; font-size: 19px; border-radius: 13px; } .seat b { font-size: 15.5px; } }
-  .seat { min-width: 0; } .seat small { overflow-wrap: anywhere; }
-  .legend .seat .av { width: 14px; height: 14px; border-radius: 5px; margin: 0; font-size: 0; }
-  @media (prefers-reduced-motion: reduce) { .seat .av { transition: none; } .seat:hover .av { transform: none; } }
+  .convoy { position: relative; height: clamp(176px, 30vw, 290px); margin-inline: -20px; overflow: hidden; }
+  .convoy .hills { position: absolute; inset: 0 0 var(--road) 0; width: 100%; height: calc(100% - var(--road)); }
+  .convoy { --road: clamp(44px, 6.4vw, 66px); }
+  @media (min-width: 820px) { .convoy { margin-inline: 0; border-radius: 22px; } }
+  .convoy .road { position: absolute; left: 0; right: 0; bottom: 0; height: var(--road); background: #CDD3CF; border-top: 3px solid #B9C2BC; }
+  .convoy .road::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 3px; margin-top: -1px; background: repeating-linear-gradient(90deg, #fff 0 22px, transparent 22px 44px); opacity: .9; }
+  .convoy .cloud { position: absolute; top: 12%; width: 90px; opacity: .9; animation: drift 70s linear infinite; }
+  .convoy .cloud.c2 { top: 26%; width: 60px; animation-duration: 95s; animation-delay: -40s; }
+  @keyframes drift { from { transform: translateX(-120px); } to { transform: translateX(110vw); } }
+  .lane { position: absolute; left: 0; right: 0; bottom: calc(var(--road) * .3); display: flex; justify-content: center; gap: clamp(6px, 3vw, 40px); padding-inline: 16px; }
+  .vcar { all: unset; position: relative; width: clamp(96px, 25vw, 230px); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .vcar:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 12px; }
+  .vcar svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .vcar .body { transform-box: fill-box; transform-origin: 50% 100%; }
+  .vcar .wheel { transform-box: fill-box; transform-origin: center; }
+  .vcar .vtag { position: absolute; left: 50%; top: -6px; transform: translate(-50%, -100%); font-size: 12px; font-weight: 600; color: var(--muted); white-space: nowrap; transition: color .2s; }
+  .vcar .beep { position: absolute; left: 6%; top: -4px; background: var(--paper); border: 1.5px solid var(--ink); border-radius: 12px 12px 12px 3px; padding: 1px 9px; font-family: var(--display); font-weight: 800; font-size: 13px; opacity: 0; transform: translate(-30%, -70%) scale(.6); pointer-events: none; }
+  .vcar.honk .beep { animation: beep .9s cubic-bezier(.23,1,.32,1); }
+  .vcar.honk .body { animation: hop .45s cubic-bezier(.23,1,.32,1); }
+  .vcar.sel .vtag { color: var(--ink); }
+  @keyframes beep { 0% { opacity: 0; transform: translate(-30%, -70%) scale(.6); } 18%, 70% { opacity: 1; transform: translate(-30%, -120%) scale(1); } 100% { opacity: 0; transform: translate(-30%, -150%) scale(1); } }
+  @keyframes hop { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(-9%) rotate(-1.5deg); } 65% { transform: translateY(1.5%); } }
+  .js .convoy:not(.go) .vcar { transform: translateX(110vw); }
+  .convoy.go .vcar { animation: arrive 1.5s cubic-bezier(.23,1,.32,1) both; animation-delay: calc(var(--n) * .22s); }
+  .convoy.go .vcar .wheel { animation: spin 1.5s cubic-bezier(.23,1,.32,1) both; animation-delay: calc(var(--n) * .22s); }
+  .convoy.go .vcar .body { animation: settle 1.5s ease-out both; animation-delay: calc(var(--n) * .22s); }
+  .convoy.go .vcar.honk .body { animation: hop .45s cubic-bezier(.23,1,.32,1); }
+  @keyframes arrive { from { transform: translateX(110vw); } to { transform: translateX(0); } }
+  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(-1080deg); } }
+  @keyframes settle { 0%, 60% { transform: translateY(0); } 72% { transform: rotate(1.8deg); } 86% { transform: rotate(-.6deg); } 100% { transform: rotate(0); } }
+  .hint { margin: -4px 0 0; font-size: 12.5px; color: var(--muted); text-align: center; }
+  .roster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(10px, 3vw, 32px); border-top: 1px solid var(--ink); }
+  .rc { padding: 12px 0 4px; border-top: 3px solid transparent; margin-top: -2px; cursor: pointer; transition: border-color .25s; }
+  .rc.sel { border-top-color: var(--car); }
+  .rc h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; color: var(--muted); }
+  .rc h3 i { width: 18px; height: 9px; border-radius: 4px 6px 2px 2px; background: var(--car); flex: none; }
+  .rc ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .rc li { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 0 8px; align-items: start; min-width: 0; }
+  .rc li::before { content: ""; width: 12px; height: 12px; border-radius: 50%; margin-top: 6px; box-sizing: border-box; }
+  .rc b { font-family: var(--display); font-weight: 700; font-size: 16px; line-height: 1.35; letter-spacing: -.01em; overflow-wrap: anywhere; }
+  .rc small { grid-column: 2; min-width: 0; white-space: normal; font-size: 12px; line-height: 1.35; color: var(--muted); overflow-wrap: anywhere; }
+  .rc b { min-width: 0; }
+  .rc li.open b { color: var(--muted); font-weight: 500; }
+  .st-ok::before, .rc li.ok::before { background: var(--forest); }
+  .st-likely::before, .rc li.likely::before { background: var(--forest-soft); border: 1.5px solid #7FA08A; }
+  .st-maybe::before, .rc li.maybe::before { background: var(--warn-soft); border: 1.5px solid #D9B45E; }
+  .st-wait::before, .rc li.wait::before { border: 1.5px dashed #8E9893; }
+  .rc li.open::before { border: 1.5px solid var(--line); }
+  .rc li.ok small { color: var(--forest); font-weight: 500; }
+  .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); }
+  .legend li { display: flex; align-items: center; gap: 7px; }
+  .legend li::before { content: ""; width: 12px; height: 12px; border-radius: 50%; box-sizing: border-box; }
+  @media (max-width: 460px) { .rc b { font-size: 14.5px; } .rc li { grid-template-columns: 10px minmax(0, 1fr); gap: 0 6px; } .rc li::before { width: 10px; height: 10px; } }
+  @media (prefers-reduced-motion: reduce) { .convoy .cloud, .convoy.go .vcar, .convoy.go .vcar .wheel, .convoy.go .vcar .body, .vcar.honk .body { animation: none !important; } .js .convoy:not(.go) .vcar { transform: none; } .vcar.honk .beep { animation-duration: 1.2s; } }
 
   .stop-art img.iso-img { display: block; width: 100%; height: auto; transition: transform .3s cubic-bezier(.16,1,.3,1); }
   .stop-art:hover img.iso-img { transform: translateY(-4px); }
@@ -240,10 +271,10 @@
   <section class="crew" id="crew" aria-labelledby="crew-h">
     <h2 id="crew-h">ใครไปบ้าง</h2>
     <p class="note">ยืนยันแล้ว 3 จาก 12 ที่นั่ง · รับได้สูงสุด 12 คน · รถ 3 คัน นั่งคันละ 4 คนพร้อมกระเป๋าใหญ่ · อัปเดต 04/10/2026</p>
-    <div class="cars"><div class="car"><div class="car-h"><span>คันที่ 1</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat ok"><span class="av" aria-hidden="true">P</span><b>Pom</b><small>ยืนยันแล้ว</small></li><li class="seat ok"><span class="av" aria-hidden="true">T</span><b>Top</b><small>ยืนยันแล้ว<br>เพื่อน Tmon</small></li><li class="seat ok"><span class="av" aria-hidden="true">B</span><b>Bask</b><small>ยืนยันแล้ว</small></li><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Tmon</b><small>น่าจะไป</small></li></ul></div><div class="car"><div class="car-h"><span>คันที่ 2</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat likely"><span class="av" aria-hidden="true">T</span><b>Toro</b><small>น่าจะไป<br>รอวันลา</small></li><li class="seat maybe"><span class="av" aria-hidden="true">P</span><b>Pao</b><small>ยังไม่แน่</small></li><li class="seat maybe"><span class="av" aria-hidden="true">G</span><b>P'Great</b><small>ยังไม่แน่</small></li><li class="seat likely"><span class="av" aria-hidden="true">A</span><b>Art</b><small>น่าจะไป<br>รองานใหม่</small></li></ul></div><div class="car"><div class="car-h"><span>คันที่ 3</span><span class="wind" aria-hidden="true"></span></div><ul class="seats"><li class="seat wait"><span class="av" aria-hidden="true">E</span><b>Erth Jordnai</b><small>รอคำตอบ</small></li><li class="seat wait"><span class="av" aria-hidden="true">P</span><b>Pyho</b><small>รอคำตอบ</small></li><li class="seat wait"><span class="av" aria-hidden="true">?</span><b>ที่ว่าง</b><small>ยังไม่มีชื่อ</small></li><li class="seat wait"><span class="av" aria-hidden="true">?</span><b>ที่ว่าง</b><small>ยังไม่มีชื่อ</small></li></ul></div></div>
-    <ul class="legend">
-      <li class="seat ok"><span class="av"></span>ยืนยันแล้ว</li><li class="seat likely"><span class="av"></span>น่าจะไป</li><li class="seat maybe"><span class="av"></span>ยังไม่แน่</li><li class="seat wait"><span class="av"></span>รอคำตอบ</li>
-    </ul>
+    <div class="convoy" aria-hidden="true"><svg class="hills" viewBox="0 0 1000 220" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="enro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EBC3B4"/><stop offset=".55" stop-color="#E4E1DA"/></linearGradient><linearGradient id="enro2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#D9A796"/><stop offset=".6" stop-color="#C9D1CB"/></linearGradient></defs><path d="M0 220V150l60-30 40 18 50-62 22 20 30-58 18 26 26-40 34 64 28-10 44 52 50-46 30 30 36-74 20 30 24-44 40 70 30-14 52 58 46-40 40 30 34-60 26 36 38-30 52 54 40-24 60 36v76z" fill="url(#enro)"/><path d="M0 220v-44l70-34 52 26 40-46 28 22 46-62 24 30 30-24 44 54 56-34 50 40 40-50 34 32 30-58 22 34 46-26 50 46 60-36 54 34 46-44 38 28 52-20 68 48v64z" fill="url(#enro2)" opacity=".85"/><path d="M0 220v-30c90-26 180-30 280-14s210 22 320 4 240-26 400 6v34z" fill="#C7D8C6"/><path d="M70 182l12 30h-24z" fill="#6E946A"/><path d="M70 172l9 22h-18z" fill="#577C57"/><path d="M96 188l12 30h-24z" fill="#6E946A"/><path d="M96 178l9 22h-18z" fill="#577C57"/><path d="M612 176l12 30h-24z" fill="#6E946A"/><path d="M612 166l9 22h-18z" fill="#577C57"/><path d="M640 184l12 30h-24z" fill="#6E946A"/><path d="M640 174l9 22h-18z" fill="#577C57"/><path d="M900 180l12 30h-24z" fill="#6E946A"/><path d="M900 170l9 22h-18z" fill="#577C57"/><path d="M930 186l12 30h-24z" fill="#6E946A"/><path d="M930 176l9 22h-18z" fill="#577C57"/><path d="M330 184l12 30h-24z" fill="#6E946A"/><path d="M330 174l9 22h-18z" fill="#577C57"/></svg><svg class="cloud" viewBox="0 0 90 34" aria-hidden="true"><path d="M14 30a12 12 0 0 1 2-24 16 16 0 0 1 30-2 13 13 0 0 1 24 6 11 11 0 0 1 6 20z" fill="#fff"/></svg><svg class="cloud c2" viewBox="0 0 90 34" aria-hidden="true"><path d="M14 30a12 12 0 0 1 2-24 16 16 0 0 1 30-2 13 13 0 0 1 24 6 11 11 0 0 1 6 20z" fill="#fff"/></svg><div class="road"></div><div class="lane"></div></div>
+    <p class="hint">แตะรถ บีบแตรเรียกเพื่อนในคันนั้น</p>
+    <div class="roster"><div class="rc" style="--car:#C25B45"><h3><i></i>คันที่ 1</h3><ul><li class="ok"><b>Pom</b><small>ยืนยันแล้ว</small></li><li class="ok"><b>Top</b><small>ยืนยันแล้ว · เพื่อน Tmon</small></li><li class="ok"><b>Bask</b><small>ยืนยันแล้ว</small></li><li class="likely"><b>Tmon</b><small>น่าจะไป</small></li></ul></div><div class="rc" style="--car:#5F8A62"><h3><i></i>คันที่ 2</h3><ul><li class="likely"><b>Toro</b><small>น่าจะไป · รอวันลา</small></li><li class="maybe"><b>Pao</b><small>ยังไม่แน่</small></li><li class="maybe" data-av="G"><b>P'Great</b><small>ยังไม่แน่</small></li><li class="likely"><b>Art</b><small>น่าจะไป · รองานใหม่</small></li></ul></div><div class="rc" style="--car:#D9A441"><h3><i></i>คันที่ 3</h3><ul><li class="wait" data-av="E"><b>Erth Jordnai</b><small>รอคำตอบ</small></li><li class="wait"><b>Pyho</b><small>รอคำตอบ</small></li><li class="open"><b>ที่ว่าง</b><small>ยังไม่มีชื่อ</small></li><li class="open"><b>ที่ว่าง</b><small>ยังไม่มีชื่อ</small></li></ul></div></div>
+    <ul class="legend"><li class="st-ok">ยืนยันแล้ว</li><li class="st-likely">น่าจะไป</li><li class="st-maybe">ยังไม่แน่</li><li class="st-wait">รอคำตอบ</li></ul>
     <p class="note">ที่นั่งจัดไว้ดูภาพรวมเฉยๆ ยังไม่ได้แบ่งคันจริง</p>
   </section>
 
@@ -922,5 +953,60 @@
 })();
 </script>
 
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var convoy = document.querySelector('.convoy'), lane = convoy.querySelector('.lane');
+  var cols = [].slice.call(document.querySelectorAll('.roster .rc'));
+  var HEAD = { ok: ['#23463A', '#fff', ''], likely: ['#E3ECE5', '#23463A', '#7FA08A'], maybe: ['#F4EBDA', '#7E520F', '#D9B45E'], wait: ['#ffffff', '#5D6964', '#8E9893'] };
+  var BAG = ['#23463A', '#E4C993', '#C25B45'];
+  function carSVG(color, seats, n) {
+    var xs = [66, 97, 129, 160], heads = '';
+    seats.forEach(function (li, i) {
+      var st = li.className, h = HEAD[st]; if (!h) return;
+      var av = li.getAttribute('data-av') || li.querySelector('b').textContent.trim().charAt(0);
+      heads += '<circle cx="' + xs[i] + '" cy="38" r="13" fill="' + h[0] + '"' + (h[2] ? ' stroke="' + h[2] + '" stroke-width="1.6"' + (st === 'wait' ? ' stroke-dasharray="3 2.4"' : '') : '') + '/>' +
+        '<text x="' + xs[i] + '" y="42.5" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="13" fill="' + h[1] + '">' + av + '</text>';
+    });
+    var edge = 'rgba(28,39,35,.55)';
+    return '<svg viewBox="0 0 200 86">' +
+      '<ellipse cx="100" cy="80" rx="88" ry="4" fill="rgba(28,39,35,.16)"/>' +
+      '<g class="body">' +
+        '<rect x="70" y="8" width="70" height="11" rx="4" fill="' + BAG[n % 3] + '" stroke="' + edge + '"/><path d="M76 19v3M134 19v3" stroke="' + edge + '" stroke-width="2"/>' +
+        '<path d="M188 64V30q0-10-10-10H60q-6 0-10 5L34 44l-16 3Q8 49 8 58v6q0 4 4 4h172q4 0 4-4z" fill="' + color + '" stroke="' + edge + '"/>' +
+        '<path d="M180 26q0-1-2-1H62q-4 0-7 4L43 44h137z" fill="#DFF0F5"/>' + heads +
+        '<path d="M188 44H34l-16 3Q8 49 8 58v6q0 4 4 4h172q4 0 4-4z" fill="' + color + '" stroke="' + edge + '"/>' +
+        '<path d="M82 25v19M113 25v19M145 25v19" stroke="' + color + '" stroke-width="4"/>' +
+        '<path d="M82 48v15M145 48v15" stroke="' + edge + '" stroke-width="1"/>' +
+        '<rect x="8" y="51" width="7" height="5" rx="2" fill="#FFE7A6"/><rect x="183" y="49" width="5" height="7" rx="2" fill="#7A2E22"/>' +
+      '</g>' +
+      [46, 154].map(function (x) { return '<g class="wheel"><circle cx="' + x + '" cy="68" r="12" fill="#2F3A36"/><circle cx="' + x + '" cy="68" r="5" fill="#E9ECEA"/><path d="M' + (x - 9) + ' 68h18M' + x + ' 59v18" stroke="#2F3A36" stroke-width="1.6" stroke-opacity=".5"/></g>'; }).join('') +
+    '</svg>';
+  }
+  cols.forEach(function (col, n) {
+    var color = getComputedStyle(col).getPropertyValue('--car').trim();
+    var seats = [].slice.call(col.querySelectorAll('li'));
+    var b = document.createElement('button');
+    b.className = 'vcar'; b.type = 'button'; b.style.setProperty('--n', n);
+    b.setAttribute('aria-label', 'คันที่ ' + (n + 1));
+    b.innerHTML = '<span class="vtag">คันที่ ' + (n + 1) + '</span><span class="beep">บี๊บ!</span>' + carSVG(color, seats, n);
+    lane.appendChild(b);
+    function pick() {
+      cols.forEach(function (c) { c.classList.toggle('sel', c === col); });
+      [].forEach.call(lane.children, function (c) { c.classList.toggle('sel', c === b); });
+      b.classList.remove('honk'); void b.offsetWidth; b.classList.add('honk');
+    }
+    b.addEventListener('click', pick);
+    col.addEventListener('click', pick);
+    b.addEventListener('animationend', function (e) { if (e.animationName === 'beep') b.classList.remove('honk'); });
+  });
+  convoy.removeAttribute('aria-hidden');
+  convoy.setAttribute('role', 'group'); convoy.setAttribute('aria-label', 'รถ 3 คัน');
+  convoy.querySelector('.hills').setAttribute('aria-hidden', 'true');
+  if (!('IntersectionObserver' in window)) { convoy.classList.add('go'); return; }
+  var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { convoy.classList.add('go'); io.disconnect(); } }); }, { threshold: .45 });
+  io.observe(convoy);
+})();
+</script>
 </body>
 </html>
