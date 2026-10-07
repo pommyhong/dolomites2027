@@ -1210,6 +1210,29 @@
       [46, 154].map(function (x) { return '<g class="wheel"><circle cx="' + x + '" cy="68" r="12" fill="#2F3A36"/><circle cx="' + x + '" cy="68" r="5" fill="#E9ECEA"/><path d="M' + (x - 9) + ' 68h18M' + x + ' 59v18" stroke="#2F3A36" stroke-width="1.6" stroke-opacity=".5"/></g>'; }).join('') +
     '</svg>';
   }
+  // two-tone car horn, synthesized on tap (no audio file) · each car a slightly different pitch
+  var actx = null, PITCH = [415, 370, 466];
+  function horn(n) {
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      if (actx.state === 'suspended') actx.resume();
+      var t0 = actx.currentTime + .01, f = PITCH[n % PITCH.length];
+      var master = actx.createGain(); master.gain.value = .11;
+      var lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1900; lp.Q.value = .8;
+      lp.connect(master); master.connect(actx.destination);
+      [[0, .11], [.17, .2]].forEach(function (p) {
+        var g = actx.createGain(), st = t0 + p[0], en = st + p[1];
+        g.gain.setValueAtTime(0, st); g.gain.linearRampToValueAtTime(1, st + .012);
+        g.gain.setValueAtTime(1, en - .03); g.gain.linearRampToValueAtTime(0, en);
+        g.connect(lp);
+        [f, f * 1.26].forEach(function (fr) {
+          var o = actx.createOscillator(); o.type = 'square';
+          o.frequency.setValueAtTime(fr * .97, st); o.frequency.linearRampToValueAtTime(fr, st + .03);
+          o.connect(g); o.start(st); o.stop(en + .02);
+        });
+      });
+    } catch (e) {}
+  }
   cols.forEach(function (col, n) {
     var color = getComputedStyle(col).getPropertyValue('--car').trim();
     var seats = [].slice.call(col.querySelectorAll('li'));
@@ -1222,6 +1245,7 @@
       cols.forEach(function (c) { c.classList.toggle('sel', c === col); });
       [].forEach.call(lane.children, function (c) { c.classList.toggle('sel', c === b); });
       b.classList.remove('honk'); void b.offsetWidth; b.classList.add('honk');
+      horn(n);
     }
     b.addEventListener('click', pick);
     col.addEventListener('click', pick);
