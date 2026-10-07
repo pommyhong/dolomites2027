@@ -134,6 +134,27 @@
   .ov-name { font-family: var(--body); font-weight: 600; font-size: 36px; fill: var(--ink); paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
   .ov-day { font-family: var(--display); font-weight: 700; font-size: 28px; fill: #fff; }
   .ov-zone { font-family: var(--body); font-weight: 600; font-size: 28px; fill: var(--muted); letter-spacing: .02em; }
+  .pano-wrap { margin-inline: -20px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .pano-wrap::-webkit-scrollbar { display: none; }
+  .pano { position: relative; min-width: 960px; margin-inline: 20px; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 40px -24px rgba(35,70,58,.45); }
+  .pano img { display: block; width: 100%; height: auto; }
+  .pano-route { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .pano-line { stroke-dashoffset: 0; }
+  .js .pano:not(.in) .pano-route path, .js .pano:not(.in) .pano-car { opacity: 0; }
+  .pano-route path { transition: opacity 1.2s ease; }
+  .pano-car { transition: opacity .4s ease 1.4s; }
+  .ppin { position: absolute; transform: translate(-50%, -100%); display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; padding: 3px 10px 3px 3px; border-radius: 20px; background: rgba(255,255,255,.95); color: var(--ink); font-size: 12.5px; font-weight: 600; text-decoration: none; box-shadow: 0 2px 6px rgba(28,39,35,.25); transition: scale .35s cubic-bezier(.23,1,.32,1), opacity .35s ease, background .15s ease, color .15s ease; transition-delay: calc(var(--n) * 70ms + .3s), calc(var(--n) * 70ms + .3s), 0s, 0s; transform-origin: 50% 100%; }
+  .ppin::after { content: ""; position: absolute; left: 50%; bottom: -6px; width: 2px; height: 6px; margin-left: -1px; background: rgba(255,255,255,.95); }
+  .ppin .pd { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: grid; place-items: center; background: var(--forest-soft); color: var(--forest); font-family: var(--display); font-weight: 700; font-size: 11.5px; }
+  .ppin.main { font-size: 14px; padding: 4px 12px 4px 4px; }
+  .ppin.main .pd { background: var(--forest); color: #fff; height: 24px; min-width: 24px; font-size: 12px; }
+  .ppin:hover, .ppin:focus-visible { background: var(--forest); color: #fff; }
+  .ppin:hover .pd, .ppin:focus-visible .pd { background: #fff; color: var(--forest); }
+  .js .pano:not(.in) .ppin { scale: .6; opacity: 0; }
+  .pano-hint { display: none; margin: -2px 0 0; font-size: 12.5px; color: var(--muted); text-align: center; }
+  @media (min-width: 1000px) { .pano-wrap { margin-inline: 0; overflow: visible; } .pano { min-width: 0; margin-inline: 0; } }
+  @media (max-width: 999px) { .pano-hint { display: block; } }
+  @media (prefers-reduced-motion: reduce) { .ppin, .pano-route path, .pano-car { transition: none; } .js .pano:not(.in) .ppin, .js .pano:not(.in) .pano-route path, .js .pano:not(.in) .pano-car { scale: 1; opacity: 1; } }
   .zmap { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "a b" "d c"; gap: 28px 36px; padding: 20px 20px 24px; background: linear-gradient(180deg, #F4F6F3, #E9EFE8 55%, #F4F6F3); border-radius: 22px; }
   .zroad { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
   .zone { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -334,8 +355,8 @@
 
   <section class="overview" id="map" aria-labelledby="map-h">
     <h2 id="map-h">แผนที่ทั้งทริป</h2>
-    <p class="note">4 โซนเรียงตามเส้นทาง แตะป้ายบนภาพเพื่อดูรูปสถานที่จริง แตะชื่อโซนเพื่อไปดูแผนรายวัน</p>
-    <div class="zmap" id="zmap" aria-label="แผนที่เส้นทาง 10 วัน จาก Milan ผ่าน Dolomites ถึง Como"></div>
+    <p class="note">เส้นทางวนจาก Milan ผ่าน Lake Garda ขึ้น Dolomites แล้วลงมา Verona กับ Como · แตะป้ายเพื่อไปดูแผนวันนั้น</p>
+    <div class="pano-wrap"><div class="pano" id="pano" role="group" aria-label="แผนที่เส้นทาง 10 วัน จาก Milan ผ่าน Dolomites ถึง Como"><img src="img/map-panorama.webp" alt="" width="1983" height="793"><svg class="pano-route" viewBox="0 0 1983 793" aria-hidden="true"></svg></div></div><p class="pano-hint">ปัดซ้ายขวาเพื่อดูทั้งเส้นทาง</p>
   </section>
 
   <section class="ask" id="ask" aria-labelledby="ask-h">
@@ -933,44 +954,38 @@
   root.innerHTML = html;
 
 
-  /* ================= four-zone overview ================= */
+  /* ================= panorama trip map ================= */
   (function () {
-    var root = document.getElementById('zmap'); if (!root) return;
-    document.documentElement.classList.add('js');
+    var root = document.getElementById('pano'); if (!root) return;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var html = '<svg class="zroad" aria-hidden="true"></svg>';
-    ZONES.forEach(function (z) {
-      html += '<div class="zone">' + zoneArt(z) + '<a class="zlab" href="#' + z.go + '"><span class="zd">' + z.day + '</span><b>' + z.name + '</b><small>' + z.sub + '</small></a></div>';
-    });
-    root.innerHTML = html;
-    var road = root.querySelector('.zroad'), arts = [].slice.call(root.querySelectorAll('.zart'));
-    var carG = '<g transform="translate(-23 -26)">' + CAR.replace('<svg viewBox="0 0 46 30">', '<svg width="46" height="30" viewBox="0 0 46 30">') + '</g>';
-    function draw() {
-      var R = root.getBoundingClientRect();
-      var pts = arts.map(function (el) { var r = el.getBoundingClientRect(); return [r.left - R.left + r.width / 2, r.top - R.top + r.height * .55]; });
-      var oneCol = Math.abs(pts[0][0] - pts[1][0]) < 4;
-      var d = 'M' + pts[0][0] + ' ' + pts[0][1];
-      for (var i = 1; i < pts.length; i++) {
-        var p = pts[i - 1], q = pts[i];
-        if (oneCol) { var sx = (i % 2 ? 1 : -1) * R.width * .62; d += ' C' + (p[0] + sx) + ' ' + p[1] + ' ' + (q[0] + sx) + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
-        else if (Math.abs(p[1] - q[1]) < R.height * .2) d += ' L' + q[0] + ' ' + q[1];
-        else { var cx = Math.max(p[0], q[0]) + (R.width - Math.max(p[0], q[0])) * 1.1; d += ' C' + cx + ' ' + p[1] + ' ' + cx + ' ' + q[1] + ' ' + q[0] + ' ' + q[1]; }
-      }
-      road.setAttribute('viewBox', '0 0 ' + R.width + ' ' + R.height);
-      road.innerHTML = '<path d="' + d + '" fill="none" stroke="#C4CAC6" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '<path d="' + d + '" fill="none" stroke="#D9DEDA" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '<path d="' + d + '" fill="none" stroke="#fff" stroke-width="2.5" stroke-dasharray="12 12" stroke-linecap="round"/>' +
-        (reduce ? '<g transform="translate(' + pts[0][0] + ' ' + pts[0][1] + ')">' + carG + '</g>'
-                : '<g>' + carG + '<animateMotion dur="18s" repeatCount="indefinite" rotate="0" path="' + d + '"/></g>');
+    // [x%, y%, day, name, day-anchor, main stop on the loop?]
+    var PINS = [
+      [8, 47, '1 · 10', 'สนามบิน MXP', 'd0', 1], [17.5, 71, '2', 'Milan', 'd1', 1], [45, 72, '3', 'Sirmione', 'd2', 1],
+      [69.4, 40, '3–5', 'Ortisei', 'd3', 1], [90.5, 30, '6–8', 'Cortina', 'd6', 1], [69, 79, '9', 'Verona', 'd9', 1], [27, 36, '9', 'Como', 'd10', 1],
+      [60.8, 27, '4', 'Seceda', 'd4', 0], [74, 47, '5', 'Alpe di Siusi', 'd5', 0], [80, 16, '7', 'Tre Cime', 'd7', 0], [83, 37, '8', 'Lago di Braies', 'd8', 0], [91, 54, '8', 'Passo Giau', 'd8', 0]
+    ];
+    var LOOP = [[160, 372], [345, 565], [892, 572], [1376, 318], [1794, 238], [1366, 626], [520, 290], [160, 372]];
+    // smooth curve through the loop points (Catmull-Rom → cubic Bézier)
+    var d = 'M' + LOOP[0];
+    for (var i = 0; i < LOOP.length - 1; i++) {
+      var p0 = LOOP[Math.max(0, i - 1)], p1 = LOOP[i], p2 = LOOP[i + 1], p3 = LOOP[Math.min(LOOP.length - 1, i + 2)], k = 1 / 6;
+      d += ' C' + (p1[0] + (p2[0] - p0[0]) * k).toFixed(0) + ' ' + (p1[1] + (p2[1] - p0[1]) * k).toFixed(0) + ' ' +
+        (p2[0] - (p3[0] - p1[0]) * k).toFixed(0) + ' ' + (p2[1] - (p3[1] - p1[1]) * k).toFixed(0) + ' ' + p2[0] + ' ' + p2[1];
     }
-    var imgs = [].slice.call(root.querySelectorAll('img')), left = imgs.length;
-    imgs.forEach(function (im) { if (im.complete) { if (!--left) draw(); } else im.addEventListener('load', function () { if (!--left) draw(); }); });
-    draw();
-    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 120); });
+    var car = '<g transform="translate(-37 -42) scale(1.6)">' + CAR.replace('<svg viewBox="0 0 46 30">', '<svg width="46" height="30" viewBox="0 0 46 30">') + '</g>';
+    var svg = root.querySelector('.pano-route');
+    svg.innerHTML = '<path d="' + d + '" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<path class="pano-line" d="' + d + '" fill="none" stroke="#C25B45" stroke-width="5" stroke-dasharray="14 10" stroke-linecap="round"/>' +
+      '<g class="pano-car">' + car + (reduce ? '' : '<animateMotion dur="22s" repeatCount="indefinite" begin="indefinite" path="' + d + '"/>') + '</g>';
+    if (reduce) svg.querySelector('.pano-car').setAttribute('transform', 'translate(' + LOOP[0] + ')');
+    root.insertAdjacentHTML('beforeend', PINS.map(function (p, n) {
+      return '<a class="ppin' + (p[5] ? ' main' : '') + '" href="#' + p[4] + '" style="left:' + p[0] + '%;top:' + p[1] + '%;--n:' + n + '"><span class="pd">' + p[2] + '</span>' + p[3] + '</a>';
+    }).join(''));
+    function go() { root.classList.add('in'); var m = svg.querySelector('animateMotion'); if (m && m.beginElement) setTimeout(function () { m.beginElement(); }, 1600); }
     if ('IntersectionObserver' in window && !reduce) {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { root.classList.add('in'); io.disconnect(); } }); }, { threshold: .15 });
+      var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { go(); io.disconnect(); } }); }, { threshold: .3 });
       io.observe(root);
-    } else root.classList.add('in');
+    } else go();
   })();
 
   /* ================= road connectors ================= */
