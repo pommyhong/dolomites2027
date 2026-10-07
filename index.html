@@ -123,7 +123,7 @@
   .facts dd small { display: block; font-weight: 400; font-size: 13px; color: var(--muted); }
 
   /* ---------- jump nav ---------- */
-  .jump { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; margin-inline: -20px; padding: 12px 20px; background: rgba(243, 244, 241, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .jump { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-inline: -20px; padding: 10px 20px; background: rgba(243, 244, 241, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
   .jump::-webkit-scrollbar { display: none; }
   .lang { position: sticky; right: 0; margin-left: auto; flex: none; display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: #E3E7E2; box-shadow: -14px 0 12px -4px rgba(243,244,241,.95); }
   .lang button { all: unset; cursor: pointer; padding: 2px 10px; border-radius: 999px; font-family: var(--display); font-weight: 700; font-size: 12.5px; letter-spacing: .04em; color: var(--muted); transition: background .2s cubic-bezier(.23,1,.32,1), color .2s ease; }
@@ -132,8 +132,11 @@
   .wrap { transition: opacity .16s ease; }
   html.lang-swapping .wrap { opacity: .2; }
   @media (prefers-reduced-motion: reduce) { .lang button { transition: none; } }
-  .jump a { flex: none; text-decoration: none; color: var(--muted); font-weight: 500; font-size: 14.5px; padding: 2px 0; border-bottom: 2px solid transparent; transition: color .15s ease, border-color .15s ease; }
-  .jump a:hover { color: var(--ink); border-color: var(--glow); }
+  .jump a { flex: none; text-decoration: none; color: var(--ink); font-weight: 500; font-size: 14.5px; padding: 6px 14px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); transition: background .2s cubic-bezier(.23,1,.32,1), color .2s ease, border-color .2s ease; }
+  .jump a:hover { border-color: #9FB3A7; background: var(--forest-soft); }
+  .jump a[aria-current="true"] { background: var(--forest); border-color: var(--forest); color: #fff; }
+  .jump a:focus-visible { outline: 2px solid var(--glow-ink); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .jump a { transition: none; } }
   [id] { scroll-margin-top: 72px; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } .chap-days .stop:target { animation: landed 1.6s cubic-bezier(.23,1,.32,1); border-radius: 14px; } }
   @keyframes landed { 0%, 30% { background: rgba(245,227,221,.9); box-shadow: 0 0 0 10px rgba(245,227,221,.9); } 100% { background: transparent; box-shadow: 0 0 0 10px transparent; } }
@@ -400,7 +403,7 @@
 
   <nav class="jump" aria-label="ไปที่ส่วน">
     <a href="#crew">ใครไปบ้าง</a><a href="#map">แผนที่</a><a href="#ask">คำถาม</a><a href="#journey">รายวัน</a><a href="#legs">เตรียมขา</a><a href="#budget">งบ</a><a href="#book">ต้องจอง</a><a href="#more">ก่อนไป</a><a href="#next">ขั้นต่อไป</a>
-  <div class="lang" role="group" aria-label="ภาษา / Language"><button type="button" data-l="th" aria-pressed="true">TH</button><button type="button" data-l="en" aria-pressed="false">EN</button></div></nav>
+  </nav>
 
   <section class="crew" id="crew" aria-labelledby="crew-h">
     <h2 id="crew-h">ใครไปบ้าง</h2>
@@ -1230,6 +1233,29 @@
   if (!('IntersectionObserver' in window)) { convoy.classList.add('go'); return; }
   var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { convoy.classList.add('go'); io.disconnect(); } }); }, { threshold: .45 });
   io.observe(convoy);
+})();
+</script>
+<script>
+/* ================= nav: highlight the section you're reading ================= */
+(function () {
+  var nav = document.querySelector('.jump'); if (!nav || !('IntersectionObserver' in window)) return;
+  var links = [].slice.call(nav.querySelectorAll('a[href^="#"]')), cur = null;
+  var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+  function set(id) {
+    if (id === cur) return; cur = id;
+    links.forEach(function (a) {
+      var on = a.getAttribute('href') === '#' + id;
+      if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      if (on && nav.scrollWidth > nav.clientWidth) {
+        var x = a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2;
+        nav.scrollTo({ left: Math.max(0, x), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      }
+    });
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) set(e.target.id); });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  secs.forEach(function (s) { io.observe(s); });
 })();
 </script>
 <script>
