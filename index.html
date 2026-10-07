@@ -1190,28 +1190,84 @@
   var cols = [].slice.call(document.querySelectorAll('.roster .rc'));
   var HEAD = { ok: ['#23463A', '#fff', ''], likely: ['#E3ECE5', '#23463A', '#7FA08A'], maybe: ['#F4EBDA', '#7E520F', '#D9B45E'], wait: ['#ffffff', '#5D6964', '#8E9893'] };
   var BAG = ['#23463A', '#E4C993', '#C25B45'];
-  function carSVG(color, seats, n) {
-    var xs = [66, 97, 129, 160], heads = '';
+  // three different 4x4s, side view, front facing left · viewBox 220×100, ground at y=96
+  var EDGE = 'rgba(28,39,35,.6)', TYRE = '#262C2A', DARK = '#2E3431', GLASS = '#DCEFF4';
+  function wheel(x, rim) {
+    return '<g class="wheel"><circle cx="' + x + '" cy="80" r="16" fill="' + TYRE + '"/>' +
+      '<circle cx="' + x + '" cy="80" r="14" fill="none" stroke="#3E4744" stroke-width="3" stroke-dasharray="3.2 2.6"/>' +
+      '<circle cx="' + x + '" cy="80" r="8.5" fill="' + rim + '" stroke="rgba(0,0,0,.25)"/>' +
+      '<path d="M' + (x - 8) + ' 80h16M' + x + ' 72v16" stroke="rgba(0,0,0,.28)" stroke-width="1.6"/>' +
+      '<circle cx="' + x + '" cy="80" r="2.6" fill="#8A938F"/></g>';
+  }
+  function headsIn(seats, xs, y, clip) {
+    var h = '';
     seats.forEach(function (li, i) {
-      var st = li.className, h = HEAD[st]; if (!h) return;
+      var st = li.className, c = HEAD[st]; if (!c || xs[i] == null) return;
       var av = li.getAttribute('data-av') || li.querySelector('b').textContent.trim().charAt(0);
-      heads += '<circle cx="' + xs[i] + '" cy="38" r="13" fill="' + h[0] + '"' + (h[2] ? ' stroke="' + h[2] + '" stroke-width="1.6"' + (st === 'wait' ? ' stroke-dasharray="3 2.4"' : '') : '') + '/>' +
-        '<text x="' + xs[i] + '" y="42.5" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="13" fill="' + h[1] + '">' + av + '</text>';
+      h += '<circle cx="' + xs[i] + '" cy="' + y + '" r="10.5" fill="' + c[0] + '"' + (c[2] ? ' stroke="' + c[2] + '" stroke-width="1.5"' + (st === 'wait' ? ' stroke-dasharray="3 2.4"' : '') : '') + '/>' +
+        '<text x="' + xs[i] + '" y="' + (y + 4.2) + '" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="11.5" fill="' + c[1] + '">' + av + '</text>';
     });
-    var edge = 'rgba(28,39,35,.55)';
-    return '<svg viewBox="0 0 200 86">' +
-      '<ellipse cx="100" cy="80" rx="88" ry="4" fill="rgba(28,39,35,.16)"/>' +
-      '<g class="body">' +
-        '<rect x="70" y="8" width="70" height="11" rx="4" fill="' + BAG[n % 3] + '" stroke="' + edge + '"/><path d="M76 19v3M134 19v3" stroke="' + edge + '" stroke-width="2"/>' +
-        '<path d="M188 64V30q0-10-10-10H60q-6 0-10 5L34 44l-16 3Q8 49 8 58v6q0 4 4 4h172q4 0 4-4z" fill="' + color + '" stroke="' + edge + '"/>' +
-        '<path d="M180 26q0-1-2-1H62q-4 0-7 4L43 44h137z" fill="#DFF0F5"/>' + heads +
-        '<path d="M188 44H34l-16 3Q8 49 8 58v6q0 4 4 4h172q4 0 4-4z" fill="' + color + '" stroke="' + edge + '"/>' +
-        '<path d="M82 25v19M113 25v19M145 25v19" stroke="' + color + '" stroke-width="4"/>' +
-        '<path d="M82 48v15M145 48v15" stroke="' + edge + '" stroke-width="1"/>' +
-        '<rect x="8" y="51" width="7" height="5" rx="2" fill="#FFE7A6"/><rect x="183" y="49" width="5" height="7" rx="2" fill="#7A2E22"/>' +
-      '</g>' +
-      [46, 154].map(function (x) { return '<g class="wheel"><circle cx="' + x + '" cy="68" r="12" fill="#2F3A36"/><circle cx="' + x + '" cy="68" r="5" fill="#E9ECEA"/><path d="M' + (x - 9) + ' 68h18M' + x + ' 59v18" stroke="#2F3A36" stroke-width="1.6" stroke-opacity=".5"/></g>'; }).join('') +
-    '</svg>';
+    return '<g clip-path="url(#' + clip + ')">' + h + '</g>';
+  }
+  function glass(id, rects) {
+    var r = rects.map(function (q) { return '<rect x="' + q[0] + '" y="' + q[1] + '" width="' + q[2] + '" height="' + q[3] + '" rx="' + (q[4] || 3) + '"/>'; }).join('');
+    return { defs: '<clipPath id="' + id + '">' + r + '</clipPath>', fill: '<g fill="' + GLASS + '">' + r + '</g>' };
+  }
+  var MODELS = [
+    function jeep(color, seats, id) {
+      var g = glass(id, [[96, 25, 23, 21], [121, 25, 23, 21], [146, 25, 23, 21], [171, 25, 23, 21]]);
+      return { defs: g.defs, body:
+        '<circle cx="206" cy="57" r="13" fill="' + TYRE + '"/><circle cx="206" cy="57" r="6.5" fill="#6E7672"/>' +
+        '<rect x="92" y="13" width="96" height="4" rx="2" fill="' + DARK + '"/><rect x="100" y="3" width="46" height="11" rx="3" fill="' + BAG[0] + '" stroke="' + EDGE + '"/><rect x="152" y="6" width="26" height="8" rx="2" fill="#E4C993" stroke="' + EDGE + '"/>' +
+        '<path d="M86 50 V25 Q86 17 94 17 H192 Q200 17 200 25 V50 Z" fill="#3B3B37" stroke="' + EDGE + '"/>' + g.fill + headsIn(seats, [107.5, 132.5, 157.5, 182.5], 40, id) +
+        '<path d="M119.5 25v21M144.5 25v21M169.5 25v21" stroke="#3B3B37" stroke-width="2.5"/>' +
+        '<path d="M84 52 L92 16 L97 16 L90 52 Z" fill="' + color + '" stroke="' + EDGE + '"/>' +
+        '<path d="M14 49 H198 Q203 49 203 54 V78 Q203 83 198 83 H14 Q8 83 8 77 V55 Q8 49 14 49 Z" fill="' + color + '" stroke="' + EDGE + '"/>' +
+        '<rect x="10" y="50" width="190" height="6" rx="3" fill="#fff" opacity=".18"/>' +
+        '<path d="M120 53v26M145 53v26" stroke="' + EDGE + '" stroke-width="1"/><rect x="126" y="58" width="8" height="2.5" rx="1.2" fill="' + DARK + '"/><rect x="151" y="58" width="8" height="2.5" rx="1.2" fill="' + DARK + '"/>' +
+        '<path d="M30 84 Q30 60 52 60 Q74 60 74 84 Z M148 84 Q148 60 170 60 Q192 60 192 84 Z" fill="' + DARK + '"/>' +
+        '<circle cx="13" cy="59" r="4.5" fill="#FFF3C4" stroke="' + EDGE + '"/><rect x="14" y="66" width="5" height="3" rx="1" fill="#F2A33A"/>' +
+        '<rect x="88" y="34" width="5" height="8" rx="1.5" fill="' + DARK + '"/>' +
+        '<rect x="2" y="72" width="15" height="8" rx="2" fill="' + DARK + '"/><rect x="196" y="72" width="13" height="8" rx="2" fill="' + DARK + '"/>',
+        wheels: wheel(52, '#7A827E') + wheel(170, '#7A827E') };
+    },
+    function defender(color, seats, id) {
+      var g = glass(id, [[72, 30, 23, 18], [98, 30, 23, 18], [124, 30, 23, 18], [150, 30, 23, 18], [176, 30, 20, 18]]);
+      return { defs: g.defs, body:
+        '<rect x="74" y="12" width="120" height="4" rx="2" fill="' + DARK + '"/><rect x="88" y="2" width="52" height="11" rx="3" fill="' + BAG[1] + '" stroke="' + EDGE + '"/><rect x="158" y="1" width="15" height="12" rx="2" fill="#B5432F" stroke="' + EDGE + '"/><rect x="176" y="1" width="15" height="12" rx="2" fill="#B5432F" stroke="' + EDGE + '"/>' +
+        '<path d="M8 77 V52 Q8 48 12 48 H56 L61 23 Q62 18 67 18 H197 Q203 18 203 24 V78 Q203 83 198 83 H14 Q8 83 8 77 Z" fill="' + color + '" stroke="' + EDGE + '"/>' +
+        '<path d="M66 18 H197 Q203 18 203 24 V27 H63 Z" fill="#F2EFE6"/>' +
+        '<g fill="' + GLASS + '"><rect x="118" y="20" width="14" height="5" rx="1.5"/><rect x="138" y="20" width="14" height="5" rx="1.5"/><rect x="158" y="20" width="14" height="5" rx="1.5"/></g>' +
+        g.fill + headsIn(seats, [83.5, 109.5, 135.5, 161.5], 43, id) +
+        '<path d="M59 48 L64 26 L69 26 L67 48 Z" fill="' + GLASS + '"/>' +
+        '<rect x="10" y="49" width="192" height="5" rx="2.5" fill="#fff" opacity=".15"/>' +
+        '<path d="M96.5 30v50M122.5 30v18M148.5 30v50" stroke="' + EDGE + '" stroke-width="1"/>' +
+        '<path d="M30 84 V67 Q30 61 36 61 H68 Q74 61 74 67 V84 Z M148 84 V67 Q148 61 154 61 H186 Q192 61 192 67 V84 Z" fill="' + DARK + '"/>' +
+        '<rect x="203" y="40" width="7" height="30" rx="3" fill="' + TYRE + '"/>' +
+        '<circle cx="12" cy="58" r="4.5" fill="#FFF3C4" stroke="' + EDGE + '"/>' +
+        '<rect x="2" y="73" width="14" height="7" rx="1.5" fill="' + DARK + '"/>',
+        wheels: wheel(52, '#C9CFCB') + wheel(170, '#C9CFCB') };
+    },
+    function camper(color, seats, id) {
+      var g = glass(id, [[14, 25, 32, 19, 7], [58, 25, 29, 19], [92, 25, 29, 19], [126, 25, 29, 19], [160, 25, 28, 19]]);
+      return { defs: g.defs, body:
+        '<rect x="36" y="10" width="140" height="3.5" rx="1.75" fill="' + DARK + '"/><rect x="30" y="3" width="150" height="7" rx="3.5" fill="#EAF3F6" stroke="' + EDGE + '"/><path d="M40 6.5 H170" stroke="#4E8FB0" stroke-width="1.6"/>' +
+        '<path d="M22 83 Q6 83 6 67 V44 Q6 17 34 16 H186 Q203 16 203 33 V77 Q203 83 197 83 Z" fill="' + color + '" stroke="' + EDGE + '"/>' +
+        '<path d="M6 50 V44 Q6 17 34 16 H186 Q203 16 203 33 V50 Z" fill="#F7F3EA"/>' +
+        '<path d="M6 44 Q6 17 34 16 H186 Q203 16 203 33 V77 Q203 83 197 83 H22 Q6 83 6 67 Z" fill="none" stroke="' + EDGE + '"/>' +
+        g.fill + headsIn(seats, [30, 72.5, 106.5, 140.5], 39, id) +
+        '<path d="M6 50.5 H203" stroke="#DADFDC" stroke-width="2"/>' +
+        '<circle cx="9" cy="58" r="3.5" fill="#F7F3EA" stroke="' + EDGE + '"/><circle cx="12" cy="66" r="4" fill="#FFF3C4" stroke="' + EDGE + '"/>' +
+        '<path d="M52 53v26" stroke="' + EDGE + '" stroke-width="1"/><path d="M90 53v26M124 53v26" stroke="' + EDGE + '" stroke-width="1" opacity=".6"/>' +
+        '<rect x="2" y="75" width="18" height="4" rx="2" fill="#DADFDC" stroke="' + EDGE + '" stroke-width=".8"/><rect x="194" y="75" width="14" height="4" rx="2" fill="#DADFDC" stroke="' + EDGE + '" stroke-width=".8"/>',
+        wheels: wheel(46, '#F4F2EC') + wheel(168, '#F4F2EC') };
+    }
+  ];
+  function carSVG(color, seats, n) {
+    var m = MODELS[n % MODELS.length](color, seats, 'gl' + n);
+    return '<svg viewBox="0 0 220 100"><defs>' + m.defs + '</defs>' +
+      '<ellipse cx="108" cy="96" rx="98" ry="4" fill="rgba(28,39,35,.16)"/>' +
+      '<g class="body">' + m.body + '</g>' + m.wheels + '</svg>';
   }
   // ---- sound, synthesized in the browser (no audio files) ----
   var actx = null, noise = null;
