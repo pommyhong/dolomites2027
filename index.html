@@ -76,9 +76,6 @@
   @media (max-width: 460px) { .rc b { font-size: 14.5px; } .rc li { grid-template-columns: 10px minmax(0, 1fr); gap: 0 6px; } .rc li::before { width: 10px; height: 10px; } }
   @media (prefers-reduced-motion: reduce) { .convoy .cloud, .convoy.go .vcar, .convoy.go .vcar .wheel, .convoy.go .vcar .body, .vcar.honk .body { animation: none !important; } .js .convoy:not(.go) .vcar { transform: none; } .vcar.honk .beep { animation-duration: 1.2s; } }
 
-  .stop-art img.iso-img { display: block; width: 100%; height: auto; transition: transform .3s cubic-bezier(.16,1,.3,1); }
-  .stop-art:hover img.iso-img { transform: translateY(-4px); }
-  @media (prefers-reduced-motion: reduce) { .stop-art img.iso-img { transition: none; } .stop-art:hover img.iso-img { transform: none; } }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,16 +143,6 @@
 
   /* ---------- overview map ---------- */
   .overview { display: flex; flex-direction: column; gap: 14px; }
-  .ov-frame { background: var(--paper); border-radius: 6px; padding: 8px; box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px rgba(35, 70, 58, .35); }
-  #ov { display: block; width: 100%; height: auto; }
-  #ov a { cursor: pointer; }
-  #ov a .cell-art { transition: transform .3s cubic-bezier(.16,1,.3,1); transform-box: fill-box; transform-origin: center; }
-  #ov a:hover .cell-art, #ov a:focus-visible .cell-art { transform: translateY(-8px); }
-  #ov a:focus-visible { outline: none; }
-  #ov a:focus-visible .cell-ring { stroke: var(--glow); stroke-width: 3; }
-  .ov-name { font-family: var(--body); font-weight: 600; font-size: 36px; fill: var(--ink); paint-order: stroke; stroke: #fff; stroke-width: 7px; stroke-linejoin: round; }
-  .ov-day { font-family: var(--display); font-weight: 700; font-size: 28px; fill: #fff; }
-  .ov-zone { font-family: var(--body); font-weight: 600; font-size: 28px; fill: var(--muted); letter-spacing: .02em; }
   .pano-wrap { margin-inline: -20px; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .pano-wrap::-webkit-scrollbar { display: none; }
   .pano { position: relative; min-width: 960px; margin-inline: 20px; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 40px -24px rgba(35,70,58,.45); }
@@ -190,27 +177,10 @@
   @media (min-width: 1000px) { .pano-wrap { margin-inline: 0; overflow: visible; } .pano { min-width: 0; margin-inline: 0; } }
   @media (max-width: 999px) { .pano-hint { display: block; } }
   @media (prefers-reduced-motion: reduce) { .ppin, .pano-route path, .pano-car { transition: none; } .js .pano:not(.in) .ppin, .js .pano:not(.in) .pano-route path, .js .pano:not(.in) .pano-car { scale: 1; opacity: 1; } }
-  .zmap { position: relative; display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "a b" "d c"; gap: 28px 36px; padding: 20px 20px 24px; background: linear-gradient(180deg, #F4F6F3, #E9EFE8 55%, #F4F6F3); border-radius: 22px; }
-  .zroad { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
-  .zone { position: relative; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-  .zone:nth-of-type(1) { grid-area: a; } .zone:nth-of-type(2) { grid-area: b; } .zone:nth-of-type(3) { grid-area: c; } .zone:nth-of-type(4) { grid-area: d; }
   .zart { position: relative; }
   .zart img { display: block; width: 100%; height: auto; transition: transform .35s cubic-bezier(.23,1,.32,1); }
   .zart:hover img { transform: translateY(-6px); }
-  .zlab { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; align-items: center; color: inherit; text-decoration: none; padding: 0 4px; }
-  .zlab .zd { grid-row: span 2; min-width: 46px; height: 46px; padding: 0 8px; border-radius: 23px; background: var(--forest); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -.01em; box-shadow: 0 0 0 3px #fff; transition: transform .2s cubic-bezier(.23,1,.32,1); }
-  .zlab b { font-family: var(--display); font-weight: 800; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.15; letter-spacing: -.02em; }
-  .zlab small { font-size: 13px; color: var(--muted); line-height: 1.4; }
-  .zlab small::after { content: " →"; color: var(--glow); }
-  .zlab:hover b, .zlab:focus-visible b { color: var(--glow); }
-  .zlab:hover .zd { transform: scale(1.06); }
-  .zmap .tag { scale: 1; opacity: 1; transition: scale .3s cubic-bezier(.23,1,.32,1), opacity .3s ease, background .15s ease, box-shadow .15s ease; }
-  .js .zmap:not(.in) .tag { scale: .6; opacity: 0; }
-  @media (max-width: 720px) {
-    .zmap { grid-template-columns: 1fr; grid-template-areas: "a" "b" "c" "d"; gap: 22px; padding: 14px 12px 18px; margin-inline: -8px; }
-    .zmap .tag { font-size: 11px; padding: 2px 8px 2px 6px; }
-  }
-  @media (prefers-reduced-motion: reduce) { .zart img, .zlab .zd, .zmap .tag { transition: none; } .zart:hover img { transform: none; } .js .zmap:not(.in) .tag { scale: 1; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .zart img { transition: none; } .zart:hover img { transform: none; } }
 
   /* ---------- ask ---------- */
   .ask { display: flex; flex-direction: column; gap: 16px; }
@@ -279,9 +249,6 @@
   }
   .journey-h { margin-bottom: 8px; }
   .stop { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: center; }
-  .stop-art { position: relative; width: 100%; max-width: 500px; justify-self: center; }
-  .stop-art svg.iso { display: block; width: 100%; height: auto; overflow: visible; transition: transform .3s cubic-bezier(.16,1,.3,1); }
-  .stop-art:hover svg.iso { transform: translateY(-4px); }
   .tag { position: absolute; transform: translate(-50%, -100%); white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; font-weight: 500; font-size: 12.5px; line-height: 1.3; color: var(--ink); background: rgba(255,255,255,.95); padding: 3px 10px 3px 7px; border-radius: 3px; box-shadow: 0 1px 3px rgba(28,39,35,.18); }
   .tag svg { width: 9px; height: 12px; flex: none; }
   .stop-text { display: flex; flex-direction: column; gap: 12px; }
@@ -323,21 +290,8 @@
   .foods { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .food { display: flex; flex-direction: column; gap: 0; font-size: 14px; font-weight: 600; line-height: 1.35; }
   .food small { color: var(--muted); font-size: 12.5px; font-weight: 400; }
-  .sunset { border-radius: 6px; overflow: hidden; position: relative; }
-  .sunset > svg { display: block; width: 100%; height: auto; }
-  .link { position: relative; height: 90px; }
-  .link > svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .road-base { fill: none; stroke: #C4CAC6; stroke-width: 10; stroke-linecap: round; }
-  .road-top { fill: none; stroke: #D6DBD7; stroke-width: 7; stroke-linecap: round; }
-  .road-dash { fill: none; stroke: #fff; stroke-width: 1.5; stroke-dasharray: 6 8; stroke-linecap: round; }
-  .rail-base { fill: none; stroke: #BFA88C; stroke-width: 9; stroke-dasharray: 2 6; }
-  .rail-l { fill: none; stroke: #8E9793; stroke-width: 2; }
-  .rider { position: absolute; left: 0; top: 0; width: 40px; height: auto; pointer-events: none; will-change: transform; z-index: 2; }
-  .rider svg { display: block; width: 100%; height: auto; }
   @media (min-width: 820px) {
     .stop { grid-template-columns: 1.15fr 1fr; gap: 48px; }
-    .stop.flip .stop-art { order: 2; }
-    .link { height: 120px; }
   }
 
   /* ---------- info ---------- */
@@ -368,8 +322,7 @@
   :focus-visible { outline: 2px solid var(--glow); outline-offset: 2px; }
   @media (max-width: 560px) { .step { grid-template-columns: 1fr; gap: 2px; } .tag { font-size: 11.5px; } button.tag { min-height: 24px; } }
   @media (prefers-reduced-motion: reduce) {
-    .jump a, .stop-art svg.iso, #ov a .cell-art { transition: none; }
-    .stop-art:hover svg.iso { transform: none; }
+    .jump a { transition: none; }
   }
 
   button.tag { border: 0; cursor: pointer; font-family: var(--body); transition: background .15s ease, transform .15s ease, box-shadow .15s ease; }
@@ -549,390 +502,9 @@
 
 <script>
 (function () {
-  /* ================= tiny isometric renderer ================= */
-  var C = 0.8660254, S = 0.5;
-  function hex2rgb(h) { h = h.replace('#', ''); return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]; }
-  function shade(h, f) { var c = hex2rgb(h); return 'rgb(' + c.map(function (v) { return Math.round(Math.min(255, v * f)); }).join(',') + ')'; }
-  var K = {
-    grass: '#B4C79A', dirt: '#CDB79C', rock: '#E4E0DA', rock2: '#D2CBC3', snow: '#FFFFFF', water: '#A9CCD4', lake: '#8FC3C6',
-    pave: '#ECE9E2', marble: '#F6F4F0', roof: '#C9724F', wood: '#B08F72', glass: '#BCD7E0', tarmac: '#B3B8B5', tram: '#D98B4E',
-    ochre: '#E4C993', brick: '#D39A7B', pine: '#6E946A', cypress: '#577C57', scree: '#DDD8CF', car: '#C25B45'
-  };
-  var LINE = 'rgba(0,0,0,.08)';
-
-  function Scene(u) {
-    this.u = u || 14; this.items = []; this.labels = [];
-    this.b = [1e9, 1e9, -1e9, -1e9]; this.seq = 0;
-  }
-  Scene.prototype.p = function (x, y, z) {
-    var X = (x - y) * C * this.u, Y = (x + y) * S * this.u - z * this.u;
-    if (X < this.b[0]) this.b[0] = X; if (Y < this.b[1]) this.b[1] = Y;
-    if (X > this.b[2]) this.b[2] = X; if (Y > this.b[3]) this.b[3] = Y;
-    return [X, Y];
-  };
-  Scene.prototype.add = function (k, svg) { this.items.push({ k: k, s: this.seq++, svg: svg }); };
-  function pts(a) { return a.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' '); }
-  function polyS(a, fill, extra) { return '<polygon points="' + pts(a) + '" fill="' + fill + '" stroke="' + LINE + '" stroke-width=".5" stroke-linejoin="round"' + (extra || '') + '/>'; }
-  function ov(a, id) { return '<polygon points="' + pts(a) + '" fill="url(#' + id + ')" stroke="none"/>'; }
-  var DEFS = '<defs><linearGradient id="isoAO" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>' +
-    '<linearGradient id="isoSheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
-    '<linearGradient id="isoRock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient>' +
-    '<filter id="isoBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter></defs>';
-
-  Scene.prototype.box = function (x, y, z, w, d, h, col, o) {
-    o = o || {};
-    var t = this, P = function (a, b, c) { return t.p(a, b, c); };
-    var top = [P(x, y, z + h), P(x + w, y, z + h), P(x + w, y + d, z + h), P(x, y + d, z + h)];
-    var L = [P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x, y + d, z + h)];
-    var R = [P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h), P(x + w, y, z + h)];
-    var svg = polyS(L, o.left || shade(col, .88)) + polyS(R, o.right || shade(col, .74)) + polyS(top, o.top || col);
-    if (!o.flatShade && h > .3) svg += ov(L, 'isoAO') + ov(R, 'isoAO');
-    if (!o.flatShade) svg += ov(top, 'isoSheen');
-    if (o.win) { // grid of windows on both visible faces
-      var wc = o.win.charAt(0) === '#' ? o.win : '#A6D8EE', rows = Math.max(1, Math.floor(h / .55)), rh = h / rows;
-      var cl = Math.max(1, Math.floor(w / .5)), cr = Math.max(1, Math.floor(d / .5)), ww, i, j, z0;
-      for (i = 0; i < rows; i++) {
-        z0 = z + i * rh + rh * .3;
-        ww = w / cl;
-        for (j = 0; j < cl; j++) svg += '<polygon points="' + pts([P(x + j * ww + ww * .3, y + d, z0), P(x + j * ww + ww * .7, y + d, z0), P(x + j * ww + ww * .7, y + d, z0 + rh * .45), P(x + j * ww + ww * .3, y + d, z0 + rh * .45)]) + '" fill="' + shade(wc, .8) + '"/>';
-        ww = d / cr;
-        for (j = 0; j < cr; j++) svg += '<polygon points="' + pts([P(x + w, y + j * ww + ww * .3, z0), P(x + w, y + j * ww + ww * .7, z0), P(x + w, y + j * ww + ww * .7, z0 + rh * .45), P(x + w, y + j * ww + ww * .3, z0 + rh * .45)]) + '" fill="' + shade(wc, .66) + '"/>';
-      }
-    }
-    this.add(o.k != null ? o.k : x + w / 2 + y + d / 2 + z * .02, svg);
-    return this;
-  };
-  Scene.prototype.slab = function (w, d, top, o) {
-    o = o || {};
-    var t = this, P = function (a, b, c) { return t.p(a, b, c); };
-    this.add(-2000, '<polygon points="' + pts([P(.6, .9, -1.9), P(w + .9, .9, -1.9), P(w + .9, d + 1.2, -1.9), P(.6, d + 1.2, -1.9)]) + '" fill="#1c2723" opacity=".22" filter="url(#isoBlur)"/>');
-    var topSide = o.left ? o.left : shade(top.charAt(0) === '#' ? top : '#B4C79A', .8);
-    this.box(0, 0, -1.9, w, d, .5, '#8E8984', { k: -1003, left: '#8E8984', right: '#79756F', top: '#8E8984', flatShade: true });
-    this.box(0, 0, -1.4, w, d, 1.1, '#A48261', { k: -1002, left: '#A48261', right: '#8A6C50', top: '#A48261', flatShade: true });
-    this.box(0, 0, -.3, w, d, .3, top, { k: -1000, left: topSide, right: shade(topSide.charAt(0) === '#' ? topSide : '#9FB083', .82) });
-    // strata specks
-    var dots = '', i, px;
-    for (i = 0; i < Math.round(w * 2.2); i++) { px = P((i * 0.47) % w, d, -.5 - ((i * 0.37) % .8)); dots += '<circle cx="' + px[0].toFixed(1) + '" cy="' + px[1].toFixed(1) + '" r="1" fill="#7C6149" opacity=".55"/>'; }
-    for (i = 0; i < Math.round(d * 2.2); i++) { px = P(w, (i * 0.53) % d, -.5 - ((i * 0.29) % .8)); dots += '<circle cx="' + px[0].toFixed(1) + '" cy="' + px[1].toFixed(1) + '" r="1" fill="#6B533E" opacity=".55"/>'; }
-    this.add(-999.5, dots);
-    return this;
-  };
-  Scene.prototype.flat = function (a, z, fill, k, extra) {
-    var t = this;
-    this.add(k != null ? k : -900, polyS(a.map(function (q) { return t.p(q[0], q[1], z); }), fill, extra));
-    return this;
-  };
-  Scene.prototype.path = function (a, stroke, w, k, extra) {
-    var t = this;
-    var d = a.map(function (q, i) { var P = t.p(q[0], q[1], q[2] || 0); return (i ? 'L' : 'M') + P[0].toFixed(1) + ' ' + P[1].toFixed(1); }).join(' ');
-    this.add(k != null ? k : -800, '<path d="' + d + '" fill="none" stroke="' + stroke + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"' + (extra || '') + '/>');
-    return this;
-  };
-  Scene.prototype.road = function (a, k) {
-    this.path(a, '#9AA6AD', 11, k).path(a, '#B9C3C9', 8, k != null ? k + .001 : -799).path(a, '#fff', 1.2, k != null ? k + .002 : -798, ' stroke-dasharray="5 6"');
-    return this;
-  };
-  Scene.prototype.roof = function (x, y, z, w, d, r, col, axis, o) {
-    o = o || {}; var t = this, P = function (a, b, c) { return t.p(a, b, c); }, svg;
-    if (axis === 'y') {
-      var mx = x + w / 2;
-      svg = polyS([P(x, y, z), P(x, y + d, z), P(mx, y + d, z + r), P(mx, y, z + r)], shade(col, .9)) +
-            polyS([P(x, y + d, z), P(x + w, y + d, z), P(mx, y + d, z + r)], shade(col, .78)) +
-            polyS([P(x + w, y, z), P(x + w, y + d, z), P(mx, y + d, z + r), P(mx, y, z + r)], col);
-    } else {
-      var my = y + d / 2;
-      svg = polyS([P(x, y, z), P(x + w, y, z), P(x + w, my, z + r), P(x, my, z + r)], shade(col, .9)) +
-            polyS([P(x + w, y, z), P(x + w, y + d, z), P(x + w, my, z + r)], shade(col, .74)) +
-            polyS([P(x, y + d, z), P(x + w, y + d, z), P(x + w, my, z + r), P(x, my, z + r)], col);
-    }
-    this.add(o.k != null ? o.k : x + w / 2 + y + d / 2 + .05 + z * .02, svg);
-    return this;
-  };
-  Scene.prototype.house = function (x, y, w, d, h, wall, roofc, axis, o) {
-    o = o || {}; var k = x + w / 2 + y + d / 2;
-    this.box(x, y, o.z || 0, w, d, h, wall, { k: k, win: o.win });
-    this.roof(x - .12, y - .12, (o.z || 0) + h, w + .24, d + .24, o.r || Math.min(w, d) * .55, roofc, axis, { k: k + .01 });
-    return this;
-  };
-  Scene.prototype.pyr = function (x, y, z, w, d, h, col, o) {
-    o = o || {}; var t = this, P = function (a, b, c) { return t.p(a, b, c); };
-    var ax = x + w * (o.ax != null ? o.ax : .5), ay = y + d * (o.ay != null ? o.ay : .5);
-    var A = P(ax, ay, z + h), bl = P(x, y + d, z), br = P(x + w, y + d, z), tr = P(x + w, y, z);
-    var f1 = [bl, br, A], f2 = [br, tr, A];
-    var svg = polyS(f1, o.left || shade(col, .95)) + polyS(f2, o.right || shade(col, .76)) + ov(f1, 'isoRock') + ov(f2, 'isoRock');
-    if (o.snow) {
-      var s = o.snow; function lerp(p, q) { return [q[0] + (p[0] - q[0]) * s, q[1] + (p[1] - q[1]) * s]; }
-      var m1 = lerp(bl, A), m2 = lerp(br, A), m3 = lerp(tr, A);
-      var j1 = [(m1[0] + m2[0]) / 2, (m1[1] + m2[1]) / 2 - 3], j2 = [(m2[0] + m3[0]) / 2, (m2[1] + m3[1]) / 2 - 3];
-      svg += polyS([m1, j1, m2, A], '#FFFFFF') + polyS([m2, j2, m3, A], '#EEF3F6');
-    }
-    this.add(o.k != null ? o.k : x + w / 2 + y + d / 2 + z * .02, svg);
-    return this;
-  };
-  Scene.prototype.wedge = function (x, y, z, w, d, h0, h1, top, side, cliff, k) {
-    var t = this, P = function (a, b, c) { return t.p(a, b, c); };
-    var T = [P(x, y, z + h0), P(x + w, y, z + h1), P(x + w, y + d, z + h1), P(x, y + d, z + h0)];
-    var L = [P(x, y + d, z), P(x + w, y + d, z), P(x + w, y + d, z + h1), P(x, y + d, z + h0)];
-    var R = [P(x + w, y, z), P(x + w, y + d, z), P(x + w, y + d, z + h1), P(x + w, y, z + h1)];
-    this.add(k != null ? k : x + w / 2 + y + d / 2, polyS(L, side) + polyS(R, cliff) + ov(R, 'isoRock') + polyS(T, top) + ov(T, 'isoSheen'));
-    return this;
-  };
-  Scene.prototype.pine = function (x, y, z, s, col) {
-    var P = this.p(x, y, z || 0), X = P[0], Y = P[1], k = s * this.u * .9;
-    this.p(x, y, (z || 0) + 3.2 * s);
-    col = col || K.pine;
-    var svg = '<rect x="' + (X - k * .12).toFixed(1) + '" y="' + (Y - k * .5).toFixed(1) + '" width="' + (k * .24).toFixed(1) + '" height="' + (k * .55).toFixed(1) + '" fill="#8A6145"/>' +
-      '<polygon points="' + pts([[X, Y - k * 2.6], [X - k * .75, Y - k * .45], [X + k * .75, Y - k * .45]]) + '" fill="' + col + '" stroke="' + LINE + '" stroke-width=".8" stroke-linejoin="round"/>' +
-      '<polygon points="' + pts([[X, Y - k * 2.6], [X + k * .75, Y - k * .45], [X + k * .1, Y - k * .45]]) + '" fill="' + shade(col.charAt(0) === '#' ? col : K.pine, .8) + '"/>';
-    this.add(x + y + .3, svg);
-    return this;
-  };
-  Scene.prototype.cypress = function (x, y, s) {
-    var P = this.p(x, y, 0), X = P[0], Y = P[1], k = s * this.u;
-    this.p(x, y, 3 * s);
-    this.add(x + y + .3, '<path d="M' + X + ' ' + (Y - k * 3) + 'C' + (X + k * .5) + ' ' + (Y - k * 2) + ' ' + (X + k * .45) + ' ' + (Y - k * .3) + ' ' + X + ' ' + Y + 'C' + (X - k * .45) + ' ' + (Y - k * .3) + ' ' + (X - k * .5) + ' ' + (Y - k * 2) + ' ' + X + ' ' + (Y - k * 3) + 'z" fill="' + K.cypress + '" stroke="' + LINE + '" stroke-width=".8"/>');
-    return this;
-  };
-  Scene.prototype.bush = function (x, y, z, r, col) {
-    var P = this.p(x, y, (z || 0) + r * .9), k = r * this.u;
-    this.add(x + y + .2, '<circle cx="' + P[0].toFixed(1) + '" cy="' + P[1].toFixed(1) + '" r="' + k.toFixed(1) + '" fill="' + (col || '#9DB98A') + '" stroke="' + LINE + '" stroke-width=".8"/><circle cx="' + (P[0] - k * .3).toFixed(1) + '" cy="' + (P[1] - k * .3).toFixed(1) + '" r="' + (k * .35).toFixed(1) + '" fill="#fff" opacity=".25"/>');
-    return this;
-  };
-  Scene.prototype.dots = function (list, col, r, k) {
-    var t = this, s = '';
-    list.forEach(function (q) { var P = t.p(q[0], q[1], q[2] || 0); s += '<circle cx="' + P[0].toFixed(1) + '" cy="' + P[1].toFixed(1) + '" r="' + r + '" fill="' + (q[3] || col) + '"/>'; });
-    this.add(k != null ? k : -700, s);
-    return this;
-  };
-  Scene.prototype.cable = function (a, b, gondolaAt, col) {
-    var P1 = this.p(a[0], a[1], a[2]), P2 = this.p(b[0], b[1], b[2]);
-    var g = [P1[0] + (P2[0] - P1[0]) * gondolaAt, P1[1] + (P2[1] - P1[1]) * gondolaAt];
-    this.add(900, '<line x1="' + P1[0].toFixed(1) + '" y1="' + P1[1].toFixed(1) + '" x2="' + P2[0].toFixed(1) + '" y2="' + P2[1].toFixed(1) + '" stroke="#55646E" stroke-width="1.2"/>' +
-      '<line x1="' + g[0].toFixed(1) + '" y1="' + g[1].toFixed(1) + '" x2="' + g[0].toFixed(1) + '" y2="' + (g[1] + 5).toFixed(1) + '" stroke="#55646E" stroke-width="1.2"/>' +
-      '<rect x="' + (g[0] - 6).toFixed(1) + '" y="' + (g[1] + 5).toFixed(1) + '" width="12" height="9" rx="2.5" fill="' + (col || '#C25B45') + '" stroke="' + LINE + '"/><rect x="' + (g[0] - 4).toFixed(1) + '" y="' + (g[1] + 7).toFixed(1) + '" width="8" height="3" rx="1" fill="#DFF3FB"/>');
-    return this;
-  };
-  Scene.prototype.car = function (x, y, col, axis) {
-    var k = x + y + .4;
-    if (axis === 'y') { this.box(x, y, 0, .8, 1.5, .45, col || K.car, { k: k }); this.box(x + .08, y + .35, .45, .64, .75, .35, '#DFF3FB', { k: k + .01 }); }
-    else { this.box(x, y, 0, 1.5, .8, .45, col || K.car, { k: k }); this.box(x + .35, y + .08, .45, .75, .64, .35, '#DFF3FB', { k: k + .01 }); }
-    return this;
-  };
-  Scene.prototype.boat = function (x, y, col) {
-    var t = this, P = function (a, b, c) { return t.p(a, b, c); };
-    this.add(x + y + .2, polyS([P(x, y + .5, .25), P(x + 1.8, y + .5, .25), P(x + 1.5, y + .9, 0), P(x + .3, y + .9, 0)], col || K.wood) +
-      polyS([P(x, y, .25), P(x + 1.8, y, .25), P(x + 1.8, y + .5, .25), P(x, y + .5, .25)], shade(col || K.wood, 1.15)));
-    return this;
-  };
-  Scene.prototype.label = function (x, y, z, text, key) { this.labels.push({ P: this.p(x, y, z), text: text, key: key }); return this; };
-  Scene.prototype.render = function () {
-    var pad = 10, b = this.b, w = b[2] - b[0] + pad * 2, h = b[3] - b[1] + pad * 2;
-    var items = this.items.slice().sort(function (a, c) { return a.k - c.k || a.s - c.s; });
-    var svg = '<svg class="iso" viewBox="' + (b[0] - pad).toFixed(1) + ' ' + (b[1] - pad).toFixed(1) + ' ' + w.toFixed(1) + ' ' + h.toFixed(1) + '" aria-hidden="true">' + DEFS + items.map(function (i) { return i.svg; }).join('') + '</svg>';
-    var tags = this.labels.map(function (l) {
-      var lx = (l.P[0] - (b[0] - pad)) / w * 100, ly = (l.P[1] - (b[1] - pad)) / h * 100;
-      return l.key ? '<button type="button" class="tag" data-place="' + l.key + '" style="left:' + lx.toFixed(1) + '%;top:' + ly.toFixed(1) + '%">' + PIN + l.text + CAM + '</button>' : '<span class="tag" style="left:' + lx.toFixed(1) + '%;top:' + ly.toFixed(1) + '%">' + PIN + l.text + '</span>';
-    }).join('');
-    return svg + tags;
-  };
   var CAM = '<svg class="cam" viewBox="0 0 14 11" aria-hidden="true"><path d="M1 3h3l1.2-2h3.6L10 3h3v7H1z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><circle cx="7" cy="6.3" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
   var PLACES = {"malpensa": {"n": "สนามบิน Milan Malpensa", "d": "สนามบินหลักของ Milan อยู่นอกเมืองราว 50 กม. นั่งรถไฟ Malpensa Express เข้าเมืองราว 50 นาที", "q": "Milan Malpensa Airport", "src": "img/malpensa.jpg", "by": "Arne Müseler", "lic": "CC BY-SA 3.0 de", "page": "https://commons.wikimedia.org/wiki/File:Milan_malpensa_terminal_airport.jpg"}, "duomo": {"n": "Duomo di Milano", "d": "มหาวิหารแบบกอธิคกลางเมือง ใช้เวลาสร้างเกือบ 600 ปี ขึ้นไปเดินบนดาดฟ้าท่ามกลางยอดแหลมได้", "q": "Duomo di Milano", "src": "img/duomo.jpg", "by": "Jiuguang Wang", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Milan_Cathedral_from_Piazza_del_Duomo.jpg"}, "galleria": {"n": "Galleria Vittorio Emanuele II", "d": "อาเขตหลังคาโดมกระจกจากศตวรรษที่ 19 อยู่ติดกับ Duomo", "q": "Galleria Vittorio Emanuele II", "src": "img/galleria.jpg", "by": "Marco Pagani", "lic": "CC BY 3.0", "page": "https://commons.wikimedia.org/wiki/File:Galleria_Milano_(179532365).jpeg"}, "navigli": {"n": "คลอง Navigli", "d": "คลองเก่าย่านร้านอาหารและบาร์ ช่วงเย็นคนมานั่งดื่ม aperitivo ริมคลอง", "q": "Naviglio Grande Milan", "src": "img/navigli.jpg", "by": "Flavmi", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Naviglio_Grande,_Milano.jpg"}, "sforzesco": {"n": "Castello Sforzesco", "d": "ปราสาทอิฐแดงของตระกูล Sforza ลานด้านในเข้าฟรี ข้างในมีพิพิธภัณฑ์หลายส่วน รวมถึงงานชิ้นสุดท้ายของ Michelangelo (Rondanini Pietà)", "q": "Castello Sforzesco", "src": "img/sforzesco.jpg", "by": "Jakub Hałun", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:20110725_Castello_Sforzesco_Milan_5557.jpg"}, "brera": {"n": "Pinacoteca di Brera", "d": "หอศิลป์ชั้นนำของอิตาลี มีงานของ Raphael, Caravaggio และ Mantegna อยู่ในย่าน Brera ที่มีร้านดีไซน์เยอะ", "q": "Pinacoteca di Brera", "src": "img/brera.jpg", "by": "Jean-Christophe BENOIST", "lic": "CC BY 3.0", "page": "https://commons.wikimedia.org/wiki/File:Milan_-_Pinacoth%C3%A8que_de_Brera_-_Cour_int%C3%A9rieure.jpg"}, "sirmione": {"n": "Sirmione", "d": "เมืองเก่าบนแหลมยื่นกลาง Lake Garda มีปราสาท Scaliger ที่มีน้ำล้อมรอบ", "q": "Sirmione", "src": "img/sirmione.jpg", "by": "Arne Müseler", "lic": "CC BY-SA 3.0 de", "page": "https://commons.wikimedia.org/wiki/File:Italy_-_Sirmione.jpg"}, "garda": {"n": "Lake Garda", "d": "ทะเลสาบใหญ่ที่สุดของอิตาลี อยู่ระหว่างทางจาก Milan ไป Dolomites", "q": "Lake Garda", "src": "img/garda.jpg", "by": "Guido Adler. Upload by Moroder", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:La_Rocca_di_Manerba_del_Garda_con_l%27isola_dei_Conigli.jpg"}, "maddalena": {"n": "โบสถ์ Santa Maddalena", "d": "โบสถ์เล็กกลางทุ่งใน Val di Funes ฉากหลังเป็นเทือกเขา Odle เป็นมุมถ่ายรูปคลาสสิกของ Dolomites", "q": "Santa Maddalena Val di Funes", "src": "img/maddalena.jpg", "by": "Eric Kilby", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Church_at_Santa_Maddalena_and_Dolomites.jpg"}, "odle": {"n": "เทือกเขา Odle", "d": "เทือกเขายอดแหลมหลัง Val di Funes มองเห็นได้ทั้งจากหุบเขาและจาก Seceda", "q": "Odle Dolomites", "src": "img/odle.jpg", "by": "Tobia Maio", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Geislergruppe_-_Gruppo_delle_Odle..jpg"}, "seceda": {"n": "Seceda", "d": "สันเขาสูง 2,519 ม. ด้านหนึ่งเป็นทุ่งหญ้าลาด อีกด้านเป็นหน้าผาชัน ขึ้นกระเช้าจาก Ortisei", "q": "Seceda", "src": "img/seceda.jpg", "by": "Wolfgang Moroder", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Seceda_Gherdeina.JPG"}, "ortisei": {"n": "Ortisei", "d": "เมืองหลักของ Val Gardena และที่พักช่วงแรก มีกระเช้าขึ้น Seceda และ Alpe di Siusi จากในเมือง", "q": "Ortisei", "src": "img/ortisei.jpg", "by": "Wolfgang Moroder", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Urtij%C3%ABi_cun_l_Sela_Y_Saslonch_da_Tlesura.jpg"}, "sassolungo": {"n": "Sassolungo", "d": "ภูเขาหินที่เห็นเด่นจากทุ่ง Alpe di Siusi ตอนเย็นหินจะเปลี่ยนเป็นสีส้มชมพู", "q": "Sassolungo", "src": "img/sassolungo.jpg", "by": "Wolfgang Moroder", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Saslonch_udu_da_Mont_de_Seuc.jpg"}, "siusi": {"n": "Alpe di Siusi", "d": "ทุ่งหญ้าบนภูเขาที่ใหญ่ที่สุดในยุโรป ทางเดินส่วนใหญ่เรียบ เดินง่าย", "q": "Alpe di Siusi", "src": "img/siusi.jpg", "by": "Sammerci", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Seiser_Alm_im_Herbst_%C2%A9Manfred_Kostner.jpg"}, "lagazuoi": {"n": "Lagazuoi", "d": "ยอดเขาที่นั่งกระเช้าขึ้นจาก Passo Falzarego บนยอดมีกระท่อมให้นั่งกินข้าวชมวิว", "q": "Rifugio Lagazuoi", "src": "img/lagazuoi.jpg", "by": "kallerna", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Lagazuoi_cable_car_2.jpg"}, "pordoi": {"n": "ถนนช่องเขา Pordoi", "d": "หนึ่งในช่องเขาบนเส้นทางขับรถข้าม Dolomites ถนนคดเคี้ยววิวสวยตลอดทาง", "q": "Passo Pordoi", "src": "img/pordoi.jpg", "by": "Giorgio Galeotti", "lic": "CC BY 4.0", "page": "https://commons.wikimedia.org/wiki/File:Pordoi_Pass_-_Canazei,_Trento,_Italy_-_August_12,_2013_03.jpg"}, "trecime": {"n": "Tre Cime di Lavaredo", "d": "ยอดเขาหินสามยอดที่เป็นสัญลักษณ์ของ Dolomites มีทางเดินรอบเขาราว 10 กม.", "q": "Rifugio Auronzo", "src": "img/trecime.jpg", "by": "Murray Foubister", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Dolomites_-_Dobbiaco_area_-_Tri_Cima_(Drei_Zinnen)_(11059160565).jpg"}, "misurina": {"n": "Lago di Misurina", "d": "ทะเลสาบใกล้ทางขึ้น Tre Cime เหมาะแวะพักหลังเดินเขา", "q": "Lago di Misurina", "src": "img/misurina.jpg", "by": "Giampaolo.Trapasso on it.wikipedia", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Lago_di_misurina.jpg"}, "braies": {"n": "Lago di Braies", "d": "ทะเลสาบสีเขียวอมฟ้า มีโรงเรือไม้และเรือพายให้เช่า ช่วงสายคนเยอะ ควรไปเช้า", "q": "Lago di Braies", "src": "img/braies.jpg", "by": "STirol", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Pragser_Wildsee_Seekofel_von_Bucht.jpg"}, "becco": {"n": "Croda del Becco", "d": "ภูเขาที่ตั้งอยู่หลังทะเลสาบ Braies เป็นฉากหลังของรูปทะเลสาบแทบทุกรูป", "q": "Croda del Becco", "src": "img/becco.jpg", "by": "ไม่ระบุ", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Dolomiten_Seekofel.jpg"}, "cinquetorri": {"n": "Cinque Torri", "d": "กลุ่มหอคอยหินใกล้ Cortina มีพิพิธภัณฑ์กลางแจ้งเรื่องสงครามโลกครั้งที่ 1", "q": "Cinque Torri", "src": "img/cinquetorri.jpg", "by": "Luca Sartoni from Vienna, Austria", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Cortina_(50162425826).jpg"}, "giau": {"n": "Passo Giau", "d": "ช่องเขาใกล้ Cortina จุดดูพระอาทิตย์ตกยอดนิยม", "q": "Passo Giau", "src": "img/giau.jpg", "by": "Frisia Orientalis", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Passo_di_Giau.jpg"}, "arena": {"n": "Arena di Verona", "d": "โรงละครกลางแจ้งสมัยโรมันกลางเมือง Verona หน้าร้อนยังใช้จัดโอเปร่า", "q": "Arena di Verona", "src": "img/arena.jpg", "by": "Claconvr", "lic": "CC BY-SA 4.0", "page": "https://commons.wikimedia.org/wiki/File:Arena-XE3F2406a.jpg"}, "como": {"n": "Lake Como", "d": "ทะเลสาบรูปตัว Y ล้อมด้วยภูเขาและวิลล่าเก่า นั่งเรือไปหมู่บ้านริมทะเลสาบได้", "q": "Como Italy", "src": "img/como.jpg", "by": "Luca Casartelli", "lic": "CC BY-SA 2.0", "page": "https://commons.wikimedia.org/wiki/File:Sentiero_del_Viandante_DSC_6340_(14020554463).jpg"}, "brunate": {"n": "รถราง Como-Brunate", "d": "รถรางไต่เขาจากเมือง Como ขึ้นหมู่บ้าน Brunate ข้างบนมีจุดชมวิวทะเลสาบ", "q": "Funicolare Como Brunate", "src": "img/brunate.jpg", "by": "Chris j wood", "lic": "CC BY-SA 3.0", "page": "https://commons.wikimedia.org/wiki/File:Como%E2%80%93Brunate_funicular_October_2012_10.jpg"}};
-  function imgArt(im) {
-    return '<img class="iso-img" src="' + im.src + '" alt="" width="' + (im.w || 1200) + '" height="' + (im.h || 1200) + '" loading="lazy">' + im.tags.map(function (t) {
-      return '<button type="button" class="tag" data-place="' + t[3] + '" style="left:' + t[0] + '%;top:' + t[1] + '%">' + PIN + t[2] + CAM + '</button>';
-    }).join('');
-  }
   var PIN = '<svg viewBox="0 0 12 15" aria-hidden="true"><path d="M6 14.5S1 9 1 5.6a5 5 0 0 1 10 0C11 9 6 14.5 6 14.5z" fill="#E4574B"/><circle cx="6" cy="5.6" r="1.9" fill="#fff"/></svg>';
-
-  /* ================= scenes ================= */
-  var SCENES = {
-    airport: function () {
-      var s = new Scene(15); s.slab(11, 8, K.tarmac, { left: '#8F989D', right: '#7A8388' });
-      s.flat([[0, 5.2], [11, 5.2], [11, 7.2], [0, 7.2]], 0, '#6F7A80', -900);
-      s.path([[.6, 6.2, 0], [10.4, 6.2, 0]], '#fff', 1.4, -899, ' stroke-dasharray="7 7"');
-      s.box(1, 1, 0, 6, 2.4, 1.6, '#F4F7F9', { win: '#BCD7E0' });
-      s.box(8.2, 1.2, 0, .9, .9, 3.6, '#F4F7F9', { k: 11 });
-      s.box(7.9, .9, 3.6, 1.5, 1.5, .8, '#BCD7E0', { k: 11.1 });
-      s.box(8, 1, 4.4, 1.3, 1.3, .2, '#F4F7F9', { k: 11.2 });
-      var P = s.p(4.5, 6.2, .8), X = P[0], Y = P[1];
-      s.add(500, '<g transform="translate(' + X.toFixed(1) + ' ' + Y.toFixed(1) + ') rotate(-14)"><path d="M-34 -3h56c6 0 10 2 10 3s-4 3-10 3h-56z" fill="#fff" stroke="' + LINE + '"/><path d="M-6 -3 6 -24h7L6 -3zM-6 3 6 22h7L6 3zM-30 -3l-6 -11h5l9 11z" fill="#DDE8EF" stroke="' + LINE + '"/><circle cx="24" cy="0" r="1.6" fill="#4F6F82"/><path d="M-20 0h34" stroke="#4F6F82" stroke-width="1.5" stroke-dasharray="2.5 2.5"/></g>');
-      s.bush(.6, .4, 0, .5).bush(10.3, 4.4, 0, .45);
-      s.label(4, 2.2, 1.9, 'สนามบิน Malpensa', 'malpensa');
-      return s;
-    },
-    milan: function () {
-      var s = new Scene(15); s.slab(13, 11, K.pave);
-      s.flat([[0, 9.2], [13, 9.2], [13, 11], [0, 11]], 0, K.water, -900);
-      s.path([[.5, 10.1, 0], [3, 10.1, 0]], '#fff', 1.2, -899, ' opacity=".7"').path([[7, 10.3, 0], [9.5, 10.3, 0]], '#fff', 1.2, -899, ' opacity=".7"');
-      s.boat(4.6, 9.7, '#F1E6D6');
-      // Duomo
-      s.box(1.5, 1.5, 0, 6.5, 3.2, 2.3, K.marble, { k: 5 });
-      s.roof(1.4, 1.4, 2.3, 6.7, 3.4, .9, '#EDE7DD', 'x', { k: 5.02 });
-      for (var i = 0; i < 9; i++) {
-        var sx = 1.6 + i * .78;
-        s.box(sx, 1.55, 2.3, .22, .22, 1.2, K.marble, { k: 5.1 + i * .001 });
-        s.pyr(sx - .02, 1.53, 3.5, .26, .26, .6, K.marble, { k: 5.11 + i * .001 });
-        s.box(sx, 4.43, 2.3, .22, .22, 1.2, K.marble, { k: 5.3 + i * .001 });
-        s.pyr(sx - .02, 4.41, 3.5, .26, .26, .6, K.marble, { k: 5.31 + i * .001 });
-      }
-      s.box(4.4, 2.8, 3.2, .5, .5, 2.4, K.marble, { k: 5.2 });
-      s.pyr(4.35, 2.75, 5.6, .6, .6, 1.1, K.marble, { k: 5.21 });
-      s.dots([[4.65, 3.05, 6.8, '#E8B632']], '#E8B632', 2.4, 5.22);
-      // west facade gable detail
-      s.flat([[8, 2], [8, 4.2], [8, 4.2], [8, 2]], 0, K.marble, -1);
-      // Galleria
-      s.box(9, 1, 0, 3, 4.2, 2, '#F6E7CC', { win: '#E6CDA3' });
-      s.roof(8.9, .9, 2, 3.2, 4.4, 1, '#A6D8EE', 'y', { k: 7.2 });
-      // tram
-      s.box(2.2, 7, 0, 3.4, 1, 1, K.tram, { win: '#FFF3D9', k: 10 });
-      s.path([[.3, 7.6, 0], [12.7, 7.6, 0]], '#8C98A0', 1.2, -890).path([[.3, 8.1, 0], [12.7, 8.1, 0]], '#8C98A0', 1.2, -890);
-      s.bush(8.5, 6.4, 0, .55);
-      s.box(9.8, 6, 0, 2.6, 2, 1.1, '#C99479', { k: 17 }); s.box(10.7, 6.5, 0, .9, .9, 2.4, '#C99479', { k: 17.2 }); s.pyr(10.65, 6.45, 2.4, 1, 1, .5, '#B0654F', { k: 17.3 });
-      s.box(.2, 5, 0, 1.7, 1.5, 1.5, K.ochre, { win: '#fff', k: 6.5 }); s.roof(.1, 4.9, 1.5, 1.9, 1.7, .4, K.roof, 'x', { k: 6.55 });
-      s.dots([[7, 6, .1], [7.6, 6.4, .1], [6.8, 6.9, .1]], '#6E7B85', 1.6);
-      s.label(11.1, 7, 3, 'Castello Sforzesco', 'sforzesco').label(1, 5.8, 2.2, 'Pinacoteca di Brera', 'brera').label(4.6, 3.2, 7.2, 'Duomo', 'duomo').label(10.5, 3, 3.2, 'Galleria', 'galleria').label(9.5, 10.2, .2, 'คลอง Navigli', 'navigli');
-      return s;
-    },
-    garda: function () {
-      var s = new Scene(15); s.slab(13, 10, K.water, { left: '#5FB8CF', right: '#4EA2B9' });
-      s.flat([[3, 3], [10, 3], [10.5, 6.5], [7, 7.3], [3.2, 6.8]], 0, '#E9DDC6', -900);
-      s.flat([[0, 7.8], [13, 7.8], [13, 10], [0, 10]], 0, K.grass, -899);
-      s.road([[0, 8.9, 0], [13, 8.9, 0]]);
-      s.car(8.5, 8.5);
-      s.box(4, 3.6, 0, 5, 2.6, 1.1, '#E6DCCB', { k: 8 });
-      for (var i = 0; i < 7; i++) { s.box(4.1 + i * .7, 3.62, 1.1, .35, .25, .35, '#E6DCCB', { k: 8.1 }); s.box(4.1 + i * .7, 5.95, 1.1, .35, .25, .35, '#E6DCCB', { k: 8.3 }); }
-      s.box(3.7, 3.3, 0, 1.2, 1.2, 2.6, '#E0D3BF', { k: 7 }); s.box(3.65, 3.25, 2.6, .35, .35, .4, '#E0D3BF', { k: 7.1 }); s.box(4.5, 3.25, 2.6, .35, .35, .4, '#E0D3BF', { k: 7.1 });
-      s.box(8.4, 5.4, 0, 1.2, 1.2, 2.2, '#E0D3BF', { k: 14.4 }); s.box(8.35, 6.25, 2.2, .35, .35, .4, '#E0D3BF', { k: 14.5 }); s.box(9.2, 5.35, 2.2, .35, .35, .4, '#E0D3BF', { k: 14.5 });
-      s.box(6, 4.3, 0, 1.4, 1.4, 3.6, '#E3D7C4', { k: 11 });
-      [0, .5, 1].forEach(function (d) { s.box(6 + d, 4.28, 3.6, .3, .3, .45, '#E3D7C4', { k: 11.1 }); s.box(7.1, 4.3 + d, 3.6, .3, .3, .45, '#E3D7C4', { k: 11.2 }); });
-      s.boat(1, 5, '#F7F1E6').boat(11, 2, '#E7C6BC');
-      s.cypress(2, 8.3, .7).cypress(11.8, 8.2, .8);
-      s.label(6.7, 5, 4.4, 'ปราสาท Sirmione', 'sirmione').label(2.5, 1.5, 0, 'Lake Garda', 'garda');
-      return s;
-    },
-    funes: function () {
-      var s = new Scene(15); s.slab(13, 11, K.grass);
-      var odle = [[0, 0, 3, 2.4, 4], [2.4, 0, 2.6, 2.2, 5.2], [4.6, .1, 2.8, 2.2, 4.6], [7, 0, 2.4, 2.2, 5.6], [9, .2, 2.4, 2, 4.8], [10.8, 0, 2.2, 2.2, 4]];
-      odle.forEach(function (m, i) { s.pyr(m[0], m[1], 0, m[2], m[3], m[4], i % 2 ? K.rock : K.rock2, { snow: .22, ax: .45 + (i % 3) * .06, k: -50 + i }); });
-      [[1, 3.2], [2, 3.6], [3.2, 3.1], [9.5, 3.3], [10.6, 3.8], [11.8, 3.2], [12.3, 4.6], [.8, 4.6]].forEach(function (p) { s.pine(p[0], p[1], 0, .55); });
-      s.path([[1, 10.4, 0], [4, 9, 0], [6, 8.8, 0], [9, 7.5, 0]], '#E9DDC3', 3, -880);
-      s.box(5.2, 6, 0, 2.6, 1.4, 1.3, '#FBF7F0', { k: 12 });
-      s.roof(5.1, 5.9, 1.3, 2.8, 1.6, .9, K.roof, 'x', { k: 12.05 });
-      s.box(7.9, 6.2, 0, .9, .9, 2.9, '#FBF7F0', { k: 14.4 });
-      s.pyr(7.85, 6.15, 2.9, 1, 1, 1.9, K.roof, { k: 14.5 });
-      s.house(2.5, 7.5, 1.4, 1.1, .8, K.wood, '#8C5A3C', 'x');
-      s.dots([[3, 9.5], [6, 10.2], [10, 9], [11, 10.3], [8.5, 9.9]], '#E7C77A', 1.8);
-      s.label(7, 6.6, 4.9, 'โบสถ์ Santa Maddalena', 'maddalena').label(8, .8, 5.8, 'เทือกเขา Odle', 'odle');
-      return s;
-    },
-    seceda: function () {
-      var s = new Scene(15); s.slab(13, 10, K.grass);
-      s.wedge(1, 1, 0, 10, 6.5, .4, 6.2, '#B9CC9C', '#A2B887', K.rock, 10);
-      for (var i = 0; i < 6; i++) s.pyr(10.2, 1 + i * 1.05, 5.4, .9, 1, 1.6 + (i % 2) * 1.1, K.rock, { k: 10.5 + i * .01, ax: .6 });
-      s.path([[2, 7, .8], [4, 5.5, 2.3], [6, 4.6, 3.6], [8.5, 3.8, 5.2]], '#EFE3C8', 2, 10.2, ' stroke-dasharray="3 4"');
-      s.house(1.2, 8, 1.6, 1.2, .9, K.wood, '#8C5A3C', 'x');
-      s.cable([1.8, 8.4, 1.4], [8.5, 2.5, 7.2], .55);
-      [[.6, 9.2], [4.5, 8.8], [6, 9.3], [11.8, 8.8], [12.4, 7.8]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.dots([[5, 3, 2.7, '#C25B45'], [5.3, 3.2, 2.9, '#4F6F82']], '#C25B45', 1.8, 11);
-      s.label(10.5, 3.5, 7.8, 'สันเขา Seceda', 'seceda').label(2, 8.6, 1.5, 'กระเช้าจาก Ortisei', 'ortisei');
-      return s;
-    },
-    siusi: function () {
-      var s = new Scene(15); s.slab(14, 11, K.grass);
-      [[1, 0, 3.4, 2.6, 4.6, K.rock2], [3.6, 0, 3, 2.4, 5.8, K.rock], [5.8, .2, 3.4, 2.5, 5, K.rock2], [9, 0, 3.6, 2.4, 4, K.rock], [11.6, .3, 2.4, 2, 3.2, K.rock2]].forEach(function (m, i) {
-        s.pyr(m[0], m[1], 0, m[2], m[3], m[4], m[5], { snow: .2, ax: .5, k: -50 + i });
-      });
-      s.path([[.5, 10.5, 0], [4, 8, 0], [8, 7.6, 0], [13.5, 5.6, 0]], '#EEE3C9', 3, -880);
-      s.house(3, 5.4, 1.6, 1.2, .9, K.wood, '#8C5A3C', 'x').house(9.2, 7.8, 1.4, 1.1, .8, K.wood, '#8C5A3C', 'y').house(11.6, 4.2, 1.2, 1, .8, K.wood, '#8C5A3C', 'x');
-      [[6, 6.2], [6.8, 5.8], [7.2, 6.8]].forEach(function (c) { s.box(c[0], c[1], 0, .7, .35, .4, '#FFFFFF', { k: c[0] + c[1] + .5 }); s.box(c[0] + .15, c[1] + .02, .1, .25, .32, .22, '#8C5A3C', { k: c[0] + c[1] + .51 }); });
-      s.dots([[2, 9], [3, 9.8], [5.5, 9.5], [7, 10.2], [10, 9.6], [12, 8.8], [1.4, 7.4], [12.8, 10], [9, 10.5]], '#E7C77A', 1.8);
-      s.dots([[2.6, 8.5], [6.2, 9.9], [11, 10.2], [8.2, 9.2]], '#E4A7A0', 1.8);
-      [[.6, 4], [1.4, 3.6], [13.2, 3], [13.4, 7.4]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.label(5, 1.2, 6, 'Sassolungo', 'sassolungo').label(7, 6.3, .8, 'ทุ่งหญ้า Alpe di Siusi', 'siusi').label(10, 8.2, .9, 'จุดเช่า e-bike Compatsch', 'siusi');
-      return s;
-    },
-    passes: function () {
-      var s = new Scene(15); s.slab(13, 11, K.grass);
-      s.pyr(6, 0, 0, 7, 4.5, 5.8, K.rock, { snow: .18, ax: .55, k: -40 });
-      s.pyr(1, .2, 0, 4.5, 3.2, 3.6, K.rock2, { snow: .2, k: -45 });
-      s.box(9.35, 2.3, 5.45, .9, .7, .55, K.wood, { k: 900 }); s.roof(9.3, 2.25, 6, 1, .8, .35, K.roof, 'x', { k: 900.1 });
-      s.cable([2.2, 4.8, .6], [9.4, 2.6, 5.6], .5);
-      s.road([[.4, 10.3, 0], [8, 10.3, 0], [2.6, 8.1, 0], [8.8, 8.1, 0], [3.4, 5.9, 0], [12.6, 5.9, 0]]);
-      s.car(5.4, 7.7, '#D9B45E');
-      s.box(10.6, 9.2, 0, .15, .15, 1.3, '#6E7B85', { k: 20 }); s.box(10.3, 9.2, 1.3, .8, .1, .45, '#4F6F82', { k: 20.1 });
-      [[11, 9.6], [12, 8.6], [12.4, 10.2], [.6, 6.5], [1.4, 5.2]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.label(9.8, 2.6, 6.6, 'Lagazuoi', 'lagazuoi').label(4.4, 10.3, .3, 'ถนนช่องเขา', 'pordoi');
-      return s;
-    },
-    trecime: function () {
-      var s = new Scene(15); s.slab(13, 11, K.scree, { left: '#C9B79E', right: '#AF9E86' });
-      s.flat([[0, 7], [13, 6.2], [13, 11], [0, 11]], 0, K.grass, -899);
-      s.box(2.6, 1.8, 0, 1.9, 1.7, 5, K.rock2, { k: 6 }); s.pyr(2.6, 1.8, 5, 1.9, 1.7, 1.4, K.rock2, { k: 6.1, snow: .35 });
-      s.box(4.9, 1.4, 0, 2.3, 2.1, 6.6, K.rock, { k: 7 }); s.pyr(4.9, 1.4, 6.6, 2.3, 2.1, 1.6, K.rock, { k: 7.1, snow: .35 });
-      s.box(7.7, 2, 0, 1.7, 1.5, 4.2, K.rock2, { k: 8 }); s.pyr(7.7, 2, 4.2, 1.7, 1.5, 1.2, K.rock2, { k: 8.1, snow: .35 });
-      s.path([[1.2, 7.4, 0], [3, 5.8, 0], [6, 5.4, 0], [9.5, 5.2, 0], [11.5, 4, 0]], '#F4EAD2', 2.2, -870, ' stroke-dasharray="3 4"');
-      s.house(1, 7.8, 2.2, 1.4, 1, '#F4EEE3', K.roof, 'x', { win: '#BCD7E0' });
-      s.flat([[8.4, 8.2], [11.8, 7.8], [12.4, 9.8], [9, 10.4]], 0, K.lake, -880);
-      [[7.8, 8], [12.6, 7.3], [8.2, 10.6], [5.2, 9.6], [6, 10.4]].forEach(function (p) { s.pine(p[0], p[1], 0, .5); });
-      s.dots([[4, 5.6, .1, '#C25B45'], [4.4, 5.5, .1, '#4F6F82'], [7.5, 5.3, .1, '#D9B45E']], '#C25B45', 1.8, -860);
-      s.label(6, 2.4, 8.4, 'Tre Cime', 'trecime').label(10.4, 9.2, .2, 'Lago di Misurina', 'misurina');
-      return s;
-    },
-    braies: function () {
-      var s = new Scene(15); s.slab(13, 11, K.grass);
-      s.pyr(2.5, 0, 0, 7.5, 3.4, 5.4, K.rock, { snow: .22, ax: .45, k: -40 });
-      s.pyr(8.6, .4, 0, 4.4, 2.6, 3.6, K.rock2, { snow: .2, k: -39 });
-      s.flat([[.8, 3.6], [12.2, 3.2], [12.4, 8.8], [7, 9.6], [1, 9]], 0, K.lake, -900);
-      s.flat([[3, 5], [8.5, 4.6], [9, 7.4], [3.6, 7.8]], 0, '#7FDDE2', -899, ' stroke="none" opacity=".55"');
-      s.box(7.2, 8.6, 0, 2.6, 1.3, 1.1, K.wood, { k: 16.5 }); s.roof(7.1, 8.5, 1.1, 2.8, 1.5, .7, '#8C5A3C', 'x', { k: 16.6 });
-      s.flat([[6.4, 8.4], [7.4, 8.4], [7.4, 9.9], [6.4, 9.9]], .05, '#D9A870', -850);
-      s.boat(3, 6, '#C98F59').boat(5.6, 7.2, '#C98F59').boat(4.6, 4.8, '#C98F59').boat(9.6, 5.8, '#C98F59');
-      [[.4, 3], [1.2, 2.4], [.3, 9.6], [2.2, 10.2], [12.6, 3], [12.7, 9.8], [11.6, 10.3], [10.4, 10.2], [3.4, 10.5]].forEach(function (p) { s.pine(p[0], p[1], 0, .55); });
-      s.label(6.2, 1.2, 5.6, 'Croda del Becco', 'becco').label(4.8, 6.4, .2, 'Lago di Braies', 'braies');
-      return s;
-    },
-    verona: function () {
-      var s = new Scene(15); s.slab(12, 10, K.pave);
-      var cx = 6, cy = 5, R = 3.6, H = 1.9, t = s;
-      function E(r, z, a0, a1, n) { var a = []; for (var i = 0; i <= n; i++) { var th = a0 + (a1 - a0) * i / n; a.push(t.p(cx + r * Math.cos(th), cy + r * Math.sin(th), z)); } return a; }
-      var full = E(R, H, 0, Math.PI * 2, 48), inner = E(R * .62, H - .6, 0, Math.PI * 2, 48);
-      var q = Math.PI / 4, front = E(R, H, -q, Math.PI - q, 30).concat(E(R, 0, Math.PI - q, -q, 30));
-      var arches = '';
-      [.25, .7].forEach(function (zf) {
-        for (var i = 1; i < 12; i++) { var th = -q + (Math.PI) * i / 12; var P = t.p(cx + R * Math.cos(th), cy + R * Math.sin(th), H * zf); arches += '<rect x="' + (P[0] - 2.2).toFixed(1) + '" y="' + (P[1] - 4).toFixed(1) + '" width="4.4" height="6.5" rx="2.2" fill="#9E5B3A" opacity=".75"/>'; }
-      });
-      s.add(10, polyS(full, '#E2C7A9') + polyS(inner, '#DCD0B8') + polyS(front, K.brick) + arches);
-      s.house(.6, .6, 2, 1.6, 1.5, '#E8D2AA', K.roof, 'x').house(9.4, .8, 1.8, 1.8, 1.8, '#E9CDBA', K.roof, 'y');
-      s.cypress(1, 8.6, .8).cypress(11.2, 8.3, .9).bush(10.6, 6.8, 0, .5);
-      s.dots([[2.5, 8.5, .1], [3, 9, .1], [9, 9.2, .1]], '#6E7B85', 1.6);
-      s.label(6, 5, 2.4, 'Arena di Verona', 'arena');
-      return s;
-    },
-    como: function () {
-      var s = new Scene(15); s.slab(13, 10, K.grass);
-      s.pyr(.2, 0, 0, 5, 3.4, 3.4, '#AAC293', { k: -40 }); s.pyr(4.4, 0, 0, 5.4, 3, 4.2, '#9EB887', { k: -39 }); s.pyr(9, .2, 0, 4, 2.8, 3, '#AAC293', { k: -38 });
-      s.flat([[0, 5.8], [13, 5.2], [13, 10], [0, 10]], 0, K.water, -900);
-      s.box(3, 3.2, 0, 3.4, 2, 1.8, K.ochre, { win: '#fff', k: 7 }); s.roof(2.9, 3.1, 1.8, 3.6, 2.2, .8, K.roof, 'x', { k: 7.05 });
-      s.box(7.4, 3.4, 0, 1.8, 1.6, 1.4, '#E9CDBA', { k: 8 }); s.roof(7.3, 3.3, 1.4, 2, 1.8, .7, K.roof, 'y', { k: 8.05 });
-      s.cypress(2.3, 4.6, .8).cypress(6.8, 4.4, .9).cypress(9.8, 4.4, .7).cypress(11.4, 4.2, .8);
-      s.path([[10.6, 4.8, 0], [12, 2, 2.2]], '#8C98A0', 1.4, 5).box(11.2, 3.2, .9, .6, .5, .5, '#C25B45', { k: 5.1 });
-      var t = s, P = function (a, b, c) { return t.p(a, b, c); };
-      s.boat(4, 7.4, '#FFFFFF').boat(8.6, 8.4, '#E7C6BC');
-      s.add(20, '<line x1="' + P(4.9, 7.6, .25)[0].toFixed(1) + '" y1="' + P(4.9, 7.6, .25)[1].toFixed(1) + '" x2="' + P(4.9, 7.6, 2)[0].toFixed(1) + '" y2="' + P(4.9, 7.6, 2)[1].toFixed(1) + '" stroke="#6E7B85" stroke-width="1.2"/>' + polyS([P(4.95, 7.6, 1.9), P(4.95, 7.6, .5), P(5.9, 7.6, .5)], '#fff'));
-      s.label(4.7, 4, 2.8, 'วิลล่าริม Lake Como', 'como').label(11.5, 3, 1.8, 'รถราง Brunate', 'brunate');
-      return s;
-    },
-    home: function () {
-      var s = new Scene(15); s.slab(11, 7, K.tarmac, { left: '#8F989D', right: '#7A8388' });
-      s.flat([[0, 3.6], [11, 3.6], [11, 5.6], [0, 5.6]], 0, '#6F7A80', -900);
-      s.path([[.6, 4.6, 0], [10.4, 4.6, 0]], '#fff', 1.4, -899, ' stroke-dasharray="7 7"');
-      s.car(2, 1.2, '#4F6F82');
-      var P = s.p(8.5, 3.5, 3.2); s.p(8.5, 3.5, 5.5);
-      s.add(500, '<g transform="translate(' + P[0].toFixed(1) + ' ' + P[1].toFixed(1) + ') rotate(-24)"><path d="M-34 -3h56c6 0 10 2 10 3s-4 3-10 3h-56z" fill="#fff" stroke="' + LINE + '"/><path d="M-6 -3 6 -24h7L6 -3zM-6 3 6 22h7L6 3zM-30 -3l-6 -11h5l9 11z" fill="#DDE8EF" stroke="' + LINE + '"/><circle cx="24" cy="0" r="1.6" fill="#4F6F82"/><path d="M-20 0h34" stroke="#4F6F82" stroke-width="1.5" stroke-dasharray="2.5 2.5"/></g>');
-      s.label(2.8, 1.6, 1.3, 'คืนรถที่ MXP', 'malpensa');
-      return s;
-    }
-  };
 
   /* ================= trip data ================= */
   var STOPS = [
@@ -1007,10 +579,8 @@
       box: { h: 'ของฝากแนะนำ', foods: [['🥓', 'Speck Alto Adige', 'แฮมรมควันแบบแพ็ก'], ['🍫', 'Baci Perugina', 'ช็อกโกแลตเฮเซลนัท'], ['🍝', 'พาสต้า + เพสโต้', 'จากซูเปอร์มาร์เก็ต']] } }
   ];
 
-  var SUNSET = '<svg viewBox="0 0 360 150" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6D6FB8"/><stop offset=".55" stop-color="#F29A8A"/><stop offset="1" stop-color="#FFD39A"/></linearGradient></defs><rect width="360" height="150" fill="url(#sg)"/><circle cx="252" cy="96" r="20" fill="#FFE6A8"/><path d="M0 150 L0 104 L40 86 L70 100 L104 80 L140 104 L360 96 L360 150Z" fill="#8E6E9C" opacity=".75"/><g fill="#5C4A73"><path d="M150 128 L154 70 Q158 60 164 70 L168 128Z"/><path d="M172 128 L176 84 Q180 76 184 84 L187 128Z"/><path d="M190 128 L193 62 Q199 50 205 62 L208 128Z"/><path d="M211 128 L214 92 Q217 86 221 92 L223 128Z"/><path d="M226 128 L228 100 Q231 95 234 100 L236 128Z"/></g><path d="M0 150 L0 126 Q90 110 180 126 T360 122 L360 150Z" fill="#4D3F63"/></svg>';
 
   var CAR = '<svg viewBox="0 0 46 30"><ellipse cx="23" cy="27" rx="18" ry="2.6" fill="rgba(46,63,76,.18)"/><path d="M5 20c0-4 2-6 6-7l5-6c1-1 2-2 4-2h9c2 0 3 1 4 2l4 6c4 1 5 3 5 7v2H5z" fill="#E4574B" stroke="rgba(46,63,76,.5)"/><path d="M17 8h6v5h-9zM25 8h4l4 5h-8z" fill="#DFF3FB"/><circle cx="13" cy="23" r="3.6" fill="#3A4852"/><circle cx="33" cy="23" r="3.6" fill="#3A4852"/><circle cx="13" cy="23" r="1.3" fill="#fff"/><circle cx="33" cy="23" r="1.3" fill="#fff"/></svg>';
-  var TRAIN = '<svg viewBox="0 0 54 30"><ellipse cx="27" cy="27" rx="22" ry="2.6" fill="rgba(46,63,76,.18)"/><path d="M4 22V10c0-3 2-5 5-5h32c5 0 9 5 9 11v6z" fill="#F4F7F9" stroke="rgba(46,63,76,.5)"/><path d="M4 16h46v3H4z" fill="#3E9A6B"/><path d="M8 8h8v5H8zM19 8h8v5h-8zM30 8h8v5h-8zM41 8c4 0 6 2 7 5h-7z" fill="#9ED3EC"/><circle cx="13" cy="24" r="2.5" fill="#3A4852"/><circle cx="40" cy="24" r="2.5" fill="#3A4852"/></svg>';
 
   /* ================= build ================= */
   var ZONES = [
@@ -1057,12 +627,11 @@
       var nm = e[2] ? '<a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(e[2]) + '" target="_blank" rel="noopener">' + e[1] + '<span aria-hidden="true"> ↗</span></a>' : '<b>' + e[1] + '</b>';
       return '<li><span class="meal" data-m="' + e[0] + '">' + e[0] + '</span><div>' + nm + '<small>' + e[3] + '</small>' + (e[4] ? '<em>' + e[4] + '</em>' : '') + '</div></li>';
     }).join('') + '</ul></div>' : '';
-    var sunset = st.sunset ? '<div class="sunset">' + SUNSET + '<button type="button" class="tag" data-place="giau" style="left:30%;top:30%">' + PIN + 'Passo Giau' + CAM + '</button><button type="button" class="tag" data-place="cinquetorri" style="left:70%;top:36%">' + PIN + 'Cinque Torri' + CAM + '</button></div>' : '';
     html += '<article class="stop" id="d' + i + '">' +
       '<div class="stop-text"><h4 class="day-h"><small>' + st.day.toUpperCase() + ' · ' + DATES[i] + '</small>' + st.title + '</h4>' +
       '<div class="ride"><span>' + st.ride[1] + '</span></div>' +
       '<ul>' + st.li.map(function (x) { return '<li>' + PIN + '<span>' + x + '</span></li>'; }).join('') + '</ul>' + walk +
-      (chips ? '<div class="chips">' + chips + '</div>' : '') + (st.note ? '<p class="stop-note">' + st.note + '</p>' : '') + box + eat + sunset + '</div></article>';
+      (chips ? '<div class="chips">' + chips + '</div>' : '') + (st.note ? '<p class="stop-note">' + st.note + '</p>' : '') + box + eat + '</div></article>';
     var ex = EXTRA[i];
     if (ex) html += '<article class="stop extra" id="' + ex.id + '"><div class="stop-text"><h4 class="day-h"><small>' + ex.day + '</small>' + ex.title + '</h4>' +
       '<div class="ride"><span>' + ex.ride + '</span></div>' +
@@ -1117,66 +686,6 @@
       io.observe(root);
     } else go();
   })();
-
-  /* ================= road connectors ================= */
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var wide = window.matchMedia('(min-width: 820px)');
-  var links = [].slice.call(document.querySelectorAll('.link'));
-  var NS = 'http://www.w3.org/2000/svg';
-  links.forEach(function (el) {
-    var kind = el.getAttribute('data-kind');
-    var svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('viewBox', '0 0 1000 100'); svg.setAttribute('preserveAspectRatio', 'none'); svg.setAttribute('aria-hidden', 'true');
-    var cls = kind === 'train' ? ['rail-base', 'rail-l'] : ['road-base', 'road-top', 'road-dash'];
-    cls.forEach(function (c) { var p = document.createElementNS(NS, 'path'); p.setAttribute('class', c); p.setAttribute('vector-effect', 'non-scaling-stroke'); svg.appendChild(p); });
-    el.appendChild(svg);
-    var r = document.createElement('div'); r.className = 'rider'; r.innerHTML = kind === 'train' ? TRAIN : CAR; el.appendChild(r);
-    el._t = reduce ? 1 : 0;
-  });
-  function shapeFor(i) {
-    // stop i (1-based index of the next stop): flip rows put art on the right on wide screens
-    if (wide.matches) {
-      var fromX = (i % 2 === 1) ? 270 : 730, toX = 1000 - fromX;
-      return 'M' + fromX + ' 0 C' + fromX + ' 70 ' + toX + ' 30 ' + toX + ' 100';
-    }
-    var a = i % 2 ? 380 : 620;
-    return 'M500 0 C500 35 ' + a + ' 30 ' + a + ' 50 S500 65 500 100';
-  }
-  function layout() {
-    links.forEach(function (el) {
-      var i = +el.getAttribute('data-i');
-      var d = shapeFor(i);
-      [].forEach.call(el.querySelectorAll(':scope > svg path'), function (p) { p.setAttribute('d', d); });
-      placeRider(el);
-    });
-  }
-  function placeRider(el) {
-    var p = el.querySelector(':scope > svg path'), r = el.querySelector('.rider');
-    var L = p.getTotalLength(), t = .06 + .82 * el._t, pt = p.getPointAtLength(L * t), pt2 = p.getPointAtLength(Math.min(L, L * t + 2));
-    var sx = el.clientWidth / 1000, sy = el.clientHeight / 100;
-    var x = pt.x * sx, y = pt.y * sy, dx = (pt2.x - pt.x) * sx;
-    var flip = dx < -0.2 ? -1 : 1;
-    r.style.transform = 'translate(' + (x - r.offsetWidth / 2).toFixed(1) + 'px,' + (y - r.offsetHeight * .8).toFixed(1) + 'px) scaleX(' + flip + ')';
-  }
-  function drive(el) {
-    if (el._run || reduce) return; el._run = true;
-    var start = null, dur = 2200;
-    function frame(ts) {
-      if (start === null) start = ts;
-      var k = Math.min(1, (ts - start) / dur);
-      el._t = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-      placeRider(el);
-      if (k < 1) requestAnimationFrame(frame);
-    }
-    requestAnimationFrame(frame);
-  }
-  layout();
-  if (wide.addEventListener) wide.addEventListener('change', layout);
-  window.addEventListener('resize', layout);
-  if ('IntersectionObserver' in window && !reduce) {
-    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { drive(e.target); io.unobserve(e.target); } }); }, { threshold: .6 });
-    links.forEach(function (el) { io.observe(el); });
-  } else { links.forEach(function (el) { el._t = 1; placeRider(el); }); }
 
   /* ================= real photo preview ================= */
   var dlg = document.getElementById('place');
