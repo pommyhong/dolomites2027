@@ -258,11 +258,16 @@
     .legs, .legs tbody, .legs tr, .legs td { display: block; }
     .legs tr { display: grid; grid-template-columns: 26px 1fr; gap: 2px 10px; padding: 12px 0; border-top: 1px solid var(--line); }
     .legs td { padding: 0 !important; border: 0 !important; }
-    .legs td:nth-child(1) { grid-row: span 4; width: 24px; height: 24px; border-radius: 50%; background: var(--forest); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 12px; }
+    .legs td:nth-child(n+2) { grid-column: 2; }
+    .legs td:nth-child(1) { grid-row: span 5; width: 24px; height: 24px; border-radius: 50%; background: var(--forest); color: #fff; display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 12px; }
     .legs td:nth-child(2) { font-weight: 600; }
     .legs td:nth-child(n+3) { font-size: 13.5px; color: var(--muted); }
+    .legs td.ez { margin-top: 6px; padding: 6px 10px !important; border: 1px dashed #C9D9CD !important; border-radius: 10px; }
+    .legs td.ez.none { display: none; }
+    .legs td.ez .lt { display: inline; color: var(--forest); font-weight: 600; margin-right: 4px; }
   }
   .legs .lv { margin-right: 4px; vertical-align: -2px; }
+  .legs .lt { display: none; }
   .train { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
   .train h3 { margin: 0; font-size: 16px; }
   .train ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
@@ -605,11 +610,11 @@
     <div class="table-wrap"><table class="legs">
       <thead><tr><th>วัน</th><th>ทางเดิน</th><th>ระดับ</th><th>เวลา</th><th>ระยะ / ความชัน</th><th>ทางเลือกเบา</th></tr></thead>
       <tbody>
-        <tr><td>4</td><td>Seceda → Col Raiser</td><td><span class="lv" data-lv="2"><i></i><i></i><i></i></span> กลาง</td><td>2.5-3.5 ชม.</td><td>ราว 7 กม. · ส่วนใหญ่ลงเขา ราว 400 ม.</td><td>เดินแค่ 500 ม. ถึงมุมสันเขา แล้วนั่งกระเช้าลง</td></tr>
-        <tr><td>5</td><td>ปั่น e-bike Alpe di Siusi</td><td><span class="lv" data-lv="1"><i></i><i></i><i></i></span> ง่าย</td><td>ครึ่งวัน</td><td>ทางเรียบเป็นส่วนใหญ่</td><td>–</td></tr>
-        <tr><td>7</td><td>รอบ Tre Cime</td><td><span class="lv" data-lv="2"><i></i><i></i><i></i></span> กลาง</td><td>3.5-5 ชม.</td><td>ราว 10 กม. · ขึ้น-ลงราว 400 ม.</td><td>พักที่ Rifugio Auronzo หรือเดินทางเรียบไป Rifugio Lavaredo</td></tr>
-        <tr><td>8</td><td>รอบ Lago di Braies</td><td><span class="lv" data-lv="1"><i></i><i></i><i></i></span> ง่าย</td><td>1.5-2 ชม.</td><td>3.7 กม. · ทางเรียบ</td><td>–</td></tr>
-        <tr><td>?</td><td>Lago di Sorapis (แผนเผื่อ)</td><td><span class="lv" data-lv="3"><i></i><i></i><i></i></span> กลาง-ยาก</td><td>4-5 ชม.</td><td>ราว 11-13 กม. · ขึ้นราว 300 ม. · เลียบหน้าผา</td><td>ไปสายชิลที่ Braies</td></tr>
+        <tr><td>4</td><td>Seceda → Col Raiser</td><td><span class="lv" data-lv="2"><i></i><i></i><i></i></span> กลาง</td><td>2.5-3.5 ชม.</td><td>ราว 7 กม. · ส่วนใหญ่ลงเขา ราว 400 ม.</td><td class="ez"><b class="lt">ทางเลือกเบา</b> เดินแค่ 500 ม. ถึงมุมสันเขา แล้วนั่งกระเช้าลง</td></tr>
+        <tr><td>5</td><td>ปั่น e-bike Alpe di Siusi</td><td><span class="lv" data-lv="1"><i></i><i></i><i></i></span> ง่าย</td><td>ครึ่งวัน</td><td>ทางเรียบเป็นส่วนใหญ่</td><td class="ez none">–</td></tr>
+        <tr><td>7</td><td>รอบ Tre Cime</td><td><span class="lv" data-lv="2"><i></i><i></i><i></i></span> กลาง</td><td>3.5-5 ชม.</td><td>ราว 10 กม. · ขึ้น-ลงราว 400 ม.</td><td class="ez"><b class="lt">ทางเลือกเบา</b> พักที่ Rifugio Auronzo หรือเดินทางเรียบไป Rifugio Lavaredo</td></tr>
+        <tr><td>8</td><td>รอบ Lago di Braies</td><td><span class="lv" data-lv="1"><i></i><i></i><i></i></span> ง่าย</td><td>1.5-2 ชม.</td><td>3.7 กม. · ทางเรียบ</td><td class="ez none">–</td></tr>
+        <tr><td>?</td><td>Lago di Sorapis (แผนเผื่อ)</td><td><span class="lv" data-lv="3"><i></i><i></i><i></i></span> กลาง-ยาก</td><td>4-5 ชม.</td><td>ราว 11-13 กม. · ขึ้นราว 300 ม. · เลียบหน้าผา</td><td class="ez"><b class="lt">ทางเลือกเบา</b> ไปสายชิลที่ Braies</td></tr>
       </tbody>
     </table></div>
     <div class="train">
